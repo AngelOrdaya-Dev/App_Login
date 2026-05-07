@@ -1,136 +1,176 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Panel de Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Roboto', sans-serif;
-            min-height: 100vh;
-            background-color: #000;
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(255, 0, 0, 0.1) 0%, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(255, 0, 0, 0.05) 0%, transparent 40%);
-            color: #fff;
-            padding: 2rem;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #222;
-        }
-        .logo {
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: #ff0000;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-        }
-        .user-nav {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        .welcome-msg {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        .logout-btn {
-            background: #222;
-            color: #fff;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.2s;
-            border: 1px solid #333;
-        }
-        .logout-btn:hover {
-            background: #ff0000;
-            border-color: #ff0000;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-        .stat-card {
-            background: #111;
-            padding: 2.5rem;
-            border-radius: 16px;
-            border: 1px solid #222;
-            transition: transform 0.2s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #ff0000;
-        }
-        .stat-card h3 {
-            color: #ff0000;
-            font-size: 0.75rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-        }
-        .stat-card p {
-            font-size: 2rem;
-            font-weight: 900;
-        }
-        .success-banner {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid #ff0000;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            color: #fff;
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
-    </style>
-</head>
-<body>
+@extends('layouts.admin')
 
-<div class="container">
-    @if(session('success'))
-        <div class="success-banner">
-            {{ session('success') }}
-        </div>
-    @endif
+@section('content')
 
-    <header>
-        <div class="logo">Academia Dashboard</div>
-        <div class="user-nav">
-            <span class="welcome-msg">Estudiante: <strong>{{ Auth::user()->name }}</strong></span>
-            <a href="{{ route('login') }}" class="logout-btn">Cerrar Sesión</a>
-        </div>
-    </header>
+            
+            <!-- Hero Card -->
+            <div class="hero-card">
+                <div class="hero-content">
+                    <h1>Bienvenido de vuelta,<br><span>{{ explode(' ', Auth::user()->name)[0] }}</span>.</h1>
+                    <p>Tu panel de control académico está listo. Revisa tu progreso, cursos y estado de matrícula en tiempo real.</p>
+                </div>
+                <div class="hero-date">
+                    <i class="far fa-calendar-check"></i>
+                    <div class="hero-date-text">
+                        <strong>{{ \Carbon\Carbon::now()->locale('es')->isoFormat('dddd, D MMM') }}</strong>
+                        <span>Ciclo Académico 2026</span>
+                    </div>
+                </div>
+            </div>
 
-    <div class="grid">
-        <div class="stat-card">
-            <h3>Estado Académico</h3>
-            <p>Activo</p>
-        </div>
-        <div class="stat-card">
-            <h3>Carrera</h3>
-            <p>{{ Auth::user()->career ? Auth::user()->career->name : 'N/A' }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Créditos</h3>
-            <p>120</p>
-        </div>
-    </div>
-</div>
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                        <div class="stat-trend"><i class="fas fa-arrow-trend-up"></i> 12%</div>
+                    </div>
+                    <div class="stat-body">
+                        <span class="stat-label">Total Estudiantes</span>
+                        <span class="stat-value">{{ $totalStudents }}</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="stat-trend"><i class="fas fa-arrow-trend-up"></i> 3%</div>
+                    </div>
+                    <div class="stat-body">
+                        <span class="stat-label">Aulas Activas</span>
+                        <span class="stat-value">{{ $activeClassrooms }}</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-swatchbook"></i></div>
+                        <div class="stat-trend"><i class="fas fa-arrow-trend-up"></i> 8%</div>
+                    </div>
+                    <div class="stat-body">
+                        <span class="stat-label">Carreras Disp.</span>
+                        <span class="stat-value">{{ $totalCareers }}</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.3); background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(46, 204, 113, 0.02)); box-shadow: inset 0 0 15px rgba(46, 204, 113, 0.1);"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-trend"><i class="fas fa-arrow-trend-up"></i> 5%</div>
+                    </div>
+                    <div class="stat-body">
+                        <span class="stat-label">Matrículas Aprobadas</span>
+                        <span class="stat-value">{{ \App\Models\User::whereNotNull('career_id')->count() }}</span>
+                    </div>
+                </div>
+            </div>
 
-</body>
-</html>
+            <!-- Complex Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Student Info Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title"><i class="fas fa-address-card"></i> Expediente del Estudiante</h3>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div style="display: flex; justify-content: center; margin-bottom: 2rem; position: relative;">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ Auth::user()->avatar }}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--bg-card); box-shadow: 0 0 0 2px var(--accent-red); object-fit: cover;" referrerpolicy="no-referrer">
+                            @else
+                                <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #800000); display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; color: white;">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-icon"><i class="far fa-user"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Nombre Completo</div>
+                                <div class="detail-value">{{ Auth::user()->name }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-icon"><i class="far fa-envelope"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Correo Electrónico</div>
+                                <div class="detail-value">{{ Auth::user()->email }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Carrera Profesional</div>
+                                <div class="detail-value" style="color: var(--accent-red);">{{ Auth::user()->career ? Auth::user()->career->name : 'No asignada' }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row" style="background: transparent; border: none; padding: 0.5rem 0 0 0;">
+                            <div class="detail-content" style="display: flex; gap: 1rem;">
+                                <div class="status-badge">Matrícula Activa</div>
+                                <div class="status-badge" style="background: rgba(52, 152, 219, 0.1); color: #3498db; border-color: rgba(52, 152, 219, 0.3);">
+                                    <i class="fab fa-google"></i> Registrado vía {{ Auth::user()->google_id ? 'Google' : 'Formulario' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chart Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title"><i class="fas fa-chart-donut"></i> Estado General</h3>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-graphic">
+                            @php
+                                $circumference = 471.2;
+                                $dashArray = ($enrolledPercentage / 100) * $circumference;
+                                $dashOffset = $circumference - $dashArray;
+                            @endphp
+                            <svg viewBox="0 0 180 180" width="180" height="180">
+                                <!-- Background circle -->
+                                <circle cx="90" cy="90" r="75" fill="none" stroke="var(--border-color)" stroke-width="12"/>
+                                <!-- Red segment (Active dynamic) -->
+                                <circle cx="90" cy="90" r="75" fill="none" stroke="var(--accent-red)" stroke-width="12" 
+                                    stroke-dasharray="{{ $dashArray }} {{ $circumference }}" 
+                                    stroke-linecap="round" style="filter: drop-shadow(0 0 8px rgba(255,0,0,0.5));"/>
+                                <!-- Dark segment -->
+                                <circle cx="90" cy="90" r="75" fill="none" stroke="#2a2a2e" stroke-width="12" 
+                                    stroke-dasharray="{{ $dashOffset }} {{ $circumference }}" 
+                                    stroke-dashoffset="-{{ $dashArray }}" stroke-linecap="round"/>
+                            </svg>
+                            <div class="chart-center">
+                                <span class="chart-center-val">{{ $enrolledPercentage }}%</span>
+                                <span class="chart-center-lbl">Inscritos</span>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <span class="legend-dot" style="background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red);"></span>
+                                    Estudiantes Inscritos
+                                </div>
+                                <span class="legend-val">{{ $enrolledPercentage }}%</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <span class="legend-dot" style="background: #2a2a2e;"></span>
+                                    Sin Carrera Asignada
+                                </div>
+                                <span class="legend-val">{{ 100 - $enrolledPercentage }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        
+@endsection

@@ -1,0 +1,142 @@
+@extends('layouts.admin')
+
+@section('content')
+<div class="panel">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h3 class="panel-title"><i class="fas fa-users"></i> Gestión de Estudiantes</h3>
+        <div style="display: flex; gap: 10px;">
+            <div style="position: relative;">
+                <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+                <input type="text" id="tableSearch" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 200px;">
+            </div>
+            <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <i class="fas fa-file-csv"></i> Exportar
+            </a>
+            <button onclick="openModal('studentModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
+                <i class="fas fa-user-plus"></i> Registrar
+            </button>
+        </div>
+    </div>
+
+    @if(session('success'))
+        <div style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid rgba(46, 204, 113, 0.3);">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+        </div>
+    @endif
+    
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;" id="studentsTable">
+            <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-light);">
+                <tr>
+                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">ID</th>
+                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Estudiante</th>
+                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Correo</th>
+                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Carrera</th>
+                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($students as $student)
+                <tr style="border-bottom: 1px solid var(--border-light); transition: var(--transition-smooth);" class="student-row">
+                    <td style="padding: 1rem 1.2rem;">#{{ str_pad($student->id, 4, '0', STR_PAD_LEFT) }}</td>
+                    <td style="padding: 1rem 1.2rem;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            @if($student->avatar)
+                                <img src="{{ $student->avatar }}" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%;" referrerpolicy="no-referrer" crossorigin="anonymous">
+                            @else
+                                <div style="width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #800000); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; color: white;">
+                                    {{ strtoupper(substr($student->name, 0, 1)) }}
+                                </div>
+                            @endif
+                            <span class="student-name">{{ $student->name }}</span>
+                        </div>
+                    </td>
+                    <td style="padding: 1rem 1.2rem; color: var(--text-muted);">{{ $student->email }}</td>
+                    <td style="padding: 1rem 1.2rem;">{{ $student->career ? $student->career->name : 'No Asignada' }}</td>
+                    <td style="padding: 1rem 1.2rem;">
+                        <form action="{{ route('students.destroy', $student->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a este estudiante?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 1rem;" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        {{ $students->links() }}
+    </div>
+</div>
+
+<!-- Modal Registrar Estudiante -->
+<div id="studentModal" style="display: {{ $errors->any() ? 'flex' : 'none' }}; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); width: 500px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h3 style="font-family: var(--font-display); font-size: 1.4rem;"><i class="fas fa-user-plus" style="color: var(--accent-red);"></i> Registrar Estudiante</h3>
+            <button onclick="closeModal('studentModal')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <form action="{{ route('students.store') }}" method="POST">
+            @csrf
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Nombre Completo</label>
+                    <input type="text" name="name" value="{{ old('name') }}" placeholder="Ej: Juan Pérez" required style="background: var(--bg-base); border: 1px solid {{ $errors->has('name') ? 'var(--accent-red)' : 'var(--border-color)' }}; color: var(--text-main); padding: 12px 15px; border-radius: 10px; outline: none; font-family: var(--font-body);">
+                    @error('name') <span style="color: var(--accent-red); font-size: 0.75rem;">{{ $message }}</span> @enderror
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Correo Electrónico</label>
+                    <input type="email" name="email" value="{{ old('email') }}" placeholder="ejemplo@correo.com" required style="background: var(--bg-base); border: 1px solid {{ $errors->has('email') ? 'var(--accent-red)' : 'var(--border-color)' }}; color: var(--text-main); padding: 12px 15px; border-radius: 10px; outline: none; font-family: var(--font-body);">
+                    @error('email') <span style="color: var(--accent-red); font-size: 0.75rem;">{{ $message }}</span> @enderror
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Carrera Profesional</label>
+                    <select name="career_id" required style="background: var(--bg-base); border: 1px solid {{ $errors->has('career_id') ? 'var(--accent-red)' : 'var(--border-color)' }}; color: var(--text-main); padding: 12px 15px; border-radius: 10px; outline: none; font-family: var(--font-body); appearance: none;">
+                        <option value="" disabled selected>Selecciona una carrera</option>
+                        @foreach($careers as $career)
+                            <option value="{{ $career->id }}" {{ old('career_id') == $career->id ? 'selected' : '' }}>{{ $career->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('career_id') <span style="color: var(--accent-red); font-size: 0.75rem;">{{ $message }}</span> @enderror
+                </div>
+                
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button type="button" onclick="closeModal('studentModal')" style="flex: 1; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 12px; border-radius: 12px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                    <button type="submit" class="btn-premium-logout" style="flex: 1; width: auto; padding: 12px; border-radius: 12px;">Registrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+    
+    // Table Search Filter
+    document.getElementById('tableSearch').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('.student-row');
+        
+        rows.forEach(row => {
+            const name = row.querySelector('.student-name').textContent.toLowerCase();
+            const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            
+            if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+@endsection
