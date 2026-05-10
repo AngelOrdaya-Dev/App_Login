@@ -22,9 +22,15 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            $user = Auth::user();
 
-            return redirect()->intended('dashboard')->with('success', 'Bienvenido nuevamente');
+            if ($user->two_factor_enabled) {
+                $user->generateTwoFactorCode();
+                return redirect()->route('verify.index');
+            }
+
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard')->with('success', 'Bienvenido nuevamente.');
         }
 
         return back()->withErrors([
@@ -42,29 +48,53 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    public function redirectToGoogle()
+    public function redirectToProvider($provider)
     {
-        return Socialite::driver('google')->redirect();
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        $driver = Socialite::driver($provider);
+        
+        // Usar stateless para evitar errores de sesión/state en entornos como ngrok/móvil
+        if (method_exists($driver, 'stateless')) {
+            $driver->stateless();
+        }
+
+        if ($provider === 'facebook') {
+            return $driver->with(['auth_type' => 'reauthenticate'])->redirect();
+        }
+        return $driver->redirect();
     }
 
-    public function handleGoogleCallback()
+    public function handleProviderCallback($provider)
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+            $driver = Socialite::driver($provider);
+            
+            if (method_exists($driver, 'stateless')) {
+                $driver->stateless();
+            }
 
-            $user = User::where('google_id', $googleUser->id)->orWhere('email', $googleUser->email)->first();
+            $socialUser = $driver->user();
+            $providerIdField = $provider . '_id';
+
+            // Buscar usuario por el ID del proveedor o por email
+            $user = User::where($providerIdField, $socialUser->getId())
+                        ->orWhere('email', $socialUser->getEmail())
+                        ->first();
 
             if ($user) {
+                // Actualizar datos existentes
                 $user->update([
-                    'google_id' => $googleUser->id,
-                    'avatar' => $googleUser->avatar,
+                    $providerIdField => $socialUser->getId(),
+                    'avatar' => $socialUser->getAvatar(),
                 ]);
             } else {
+                // Crear nuevo usuario
                 $user = User::create([
-                    'name' => $googleUser->name,
-                    'email' => $googleUser->email,
-                    'google_id' => $googleUser->id,
-                    'avatar' => $googleUser->avatar,
+                    'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'Usuario',
+                    'email' => $socialUser->getEmail(),
+                    $providerIdField => $socialUser->getId(),
+                    'avatar' => $socialUser->getAvatar(),
                     'password' => null,
                     'career_id' => null,
                     'terms_accepted' => true
@@ -73,10 +103,12 @@ class LoginController extends Controller
 
             Auth::login($user);
 
-            return redirect()->route('dashboard')->with('success', 'Bienvenido ' . $user->name);
+            return redirect()->route('dashboard')->with('success', 'Bienvenido ' . $user->name . '.');
             
         } catch (\Exception $e) {
-            return redirect('/login')->with('error', 'Error al autenticarse con Google: ' . $e->getMessage());
+            \Log::error("Social Auth Error ($provider): " . $e->getMessage());
+            $errorMessage = $e->getMessage() ?: 'No se pudo obtener información del proveedor. Intenta nuevamente.';
+            return redirect('/login')->with('error', "Error al autenticarse con " . ucfirst($provider) . ": " . $errorMessage);
         }
     }
 }

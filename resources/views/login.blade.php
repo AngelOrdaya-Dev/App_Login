@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff0000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -47,9 +54,19 @@
         input:focus { border-color: #ff0000; background: #222; }
         button[type="submit"] { width: 100%; padding: 1.2rem; background-color: #ff0000; border: none; border-radius: 12px; color: #fff; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 15px 30px rgba(255, 0, 0, 0.3); margin-bottom: 1rem; }
         button[type="submit"]:hover { background-color: #e60000; transform: translateY(-2px); box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4); }
-        .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 1.2rem; background-color: #fff; border: none; border-radius: 12px; color: #000; text-decoration: none; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-google:hover { background-color: #f2f2f2; transform: translateY(-2px); box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1); }
-        .btn-google img { width: 20px; height: 20px; }
+        .btn-social { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 1.2rem; border: none; border-radius: 12px; text-decoration: none; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem; }
+        .btn-social:hover { transform: translateY(-2px); }
+        
+        .btn-google { background-color: #fff; color: #000; }
+        .btn-google:hover { background-color: #f2f2f2; box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1); }
+        
+        .btn-facebook { background-color: #1877F2; color: #fff; }
+        .btn-facebook:hover { background-color: #166fe5; box-shadow: 0 20px 40px rgba(24, 119, 242, 0.2); }
+        
+        .btn-github { background-color: #24292e; color: #fff; }
+        .btn-github:hover { background-color: #1b1f23; box-shadow: 0 20px 40px rgba(36, 41, 46, 0.3); }
+
+        .btn-social img { width: 22px; height: 22px; }
         .divider { display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: #666; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #222; }
         .divider::before { margin-right: .5em; }
@@ -61,22 +78,63 @@
 <body>
 <div class="card">
     <div class="card-header">
-        <span class="header-icon">🎓</span>
+        <div style="background-color: #ff0000; color: #fff; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 20px; margin: 0 auto 1.5rem; box-shadow: 0 0 25px rgba(255, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1);">
+            <i class="fas fa-graduation-cap" style="font-size: 35px; color: #fff !important;"></i>
+        </div>
         <h1>Iniciar Sesión</h1>
         <p>Accede a tu cuenta de estudiante</p>
     </div>
+    @if($errors->any())
+        <div style="background: rgba(255, 62, 62, 0.15); border: 1px solid #ff3e3e; border-radius: 12px; padding: 1rem; color: #ff3e3e; font-size: 0.9rem; margin-bottom: 2rem; font-weight: 600; text-align: center;">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @if(session('error'))
         <div style="background: #ff0000; border-radius: 8px; padding: 1rem; color: #fff; font-size: 0.95rem; margin-bottom: 2rem; font-weight: 700; text-align: center;">{{ session('error') }}</div>
     @endif
     <form action="{{ url('/login') }}" method="POST">
         @csrf
-        <div class="form-group"><label>Dirección de Correo</label><input type="email" name="email" placeholder="ejemplo@universidad.edu" required></div>
-        <div class="form-group"><label>Contraseña</label><input type="password" name="password" placeholder="Tu contraseña" required></div>
+            <div class="form-group">
+                <label>DIRECCIÓN DE CORREO</label>
+                <input type="email" name="email" placeholder="ejemplo@correo.com" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label>CONTRASEÑA</label>
+                <input type="password" name="password" placeholder="••••••••••••" required autocomplete="new-password">
+            </div>
         <button type="submit">Entrar</button>
     </form>
     <div class="divider">Ingresar con red social</div>
-    <a href="{{ route('login.google') }}" class="btn-google"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">Google</a>
+    
+    <a href="{{ route('social.redirect', 'google') }}" class="btn-social btn-google">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+        Google
+    </a>
+    
+    <a href="{{ route('social.redirect', 'facebook') }}" class="btn-social btn-facebook">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook">
+        Facebook
+    </a>
+    
+    <a href="{{ route('social.redirect', 'github') }}" class="btn-social btn-github">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" style="filter: invert(1);">
+        GitHub
+    </a>
+
     <p class="footer-text">¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate aquí</a></p>
 </div>
+<!-- PWA -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js');
+        });
+    }
+</script>
 </body>
 </html>

@@ -2,12 +2,12 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;">
         <h3 class="panel-title"><i class="fas fa-users"></i> Gestión de Estudiantes</h3>
-        <div style="display: flex; gap: 10px;">
-            <div style="position: relative;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 300px;">
+            <div style="position: relative; flex: 1; min-width: 200px; max-width: 300px;">
                 <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 200px;">
+                <input type="text" id="tableSearch" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 100%;">
             </div>
             <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
                 <i class="fas fa-file-csv"></i> Exportar
@@ -24,12 +24,12 @@
         </div>
     @endif
     
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
+    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;" id="studentsTable">
             <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-light);">
                 <tr>
-                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">ID</th>
-                    <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Estudiante</th>
+                    <th style="padding: 1.2rem 1rem; text-align: left; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">CÓDIGO</th>
+                    <th style="padding: 1.2rem 1rem; text-align: left; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">ESTUDIANTE</th>
                     <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Correo</th>
                     <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Carrera</th>
                     <th style="padding: 1.2rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Acciones</th>
@@ -38,7 +38,9 @@
             <tbody>
                 @foreach($students as $student)
                 <tr style="border-bottom: 1px solid var(--border-light); transition: var(--transition-smooth);" class="student-row">
-                    <td style="padding: 1rem 1.2rem;">#{{ str_pad($student->id, 4, '0', STR_PAD_LEFT) }}</td>
+                <td style="padding: 1.2rem 1rem; color: var(--text-main); font-weight: 600; font-family: var(--font-display);">
+                    EST-{{ str_pad(($students->currentPage() - 1) * $students->perPage() + $loop->iteration, 3, '0', STR_PAD_LEFT) }}
+                </td>
                     <td style="padding: 1rem 1.2rem;">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             @if($student->avatar)
@@ -75,7 +77,7 @@
 
 <!-- Modal Registrar Estudiante -->
 <div id="studentModal" style="display: {{ $errors->any() ? 'flex' : 'none' }}; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); width: 500px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h3 style="font-family: var(--font-display); font-size: 1.4rem;"><i class="fas fa-user-plus" style="color: var(--accent-red);"></i> Registrar Estudiante</h3>
             <button onclick="closeModal('studentModal')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;"><i class="fas fa-times"></i></button>

@@ -9,6 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff0000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Meta referrer for Google Avatar images -->
     <meta name="referrer" content="no-referrer">
     
@@ -34,15 +43,31 @@
             --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        body.light-mode {
+            --bg-base: #f0f2f5;
+            --bg-surface: #ffffff;
+            --bg-surface-hover: #eef1f5;
+            --bg-card: #ffffff;
+            --text-main: #111111;
+            --text-muted: #555555;
+            --border-color: #d1d9e6;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --border-red: rgba(255, 0, 0, 0.25);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
         body {
             font-family: var(--font-body);
             background-color: var(--bg-base);
             color: var(--text-main);
-            display: flex;
+            display: block;
             min-height: 100vh;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -94,6 +119,23 @@
             flex: 1;
             padding: 2rem 1rem;
             overflow-y: auto;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 0, 0, 0.3);
         }
         
         .menu-section {
@@ -176,10 +218,11 @@
         /* ===== MAIN LAYOUT ===== */
         .main-container {
             margin-left: 280px;
-            flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            min-height: 100vh;
+            max-width: calc(100% - 280px);
         }
         
         /* Subtle Background Glow */
@@ -226,7 +269,7 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem; /* Reduced from 2rem */
         }
 
         .search-bar {
@@ -260,6 +303,66 @@
             width: 100%;
             font-family: var(--font-body);
             font-size: 0.9rem;
+        }
+
+        input::placeholder, select::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* Generic modal input styles */
+        .modal-input {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-main) !important;
+            padding: 12px 15px !important;
+            border-radius: 12px !important;
+            outline: none !important;
+            font-family: var(--font-body) !important;
+            transition: var(--transition-smooth);
+        }
+
+        body.light-mode .modal-input {
+            background: transparent !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        .modal-input:focus {
+            border-color: var(--accent-red) !important;
+            box-shadow: 0 0 10px var(--accent-red-faded);
+        }
+
+        .modal-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Fix for select options in dark mode */
+        select.modal-input option {
+            background-color: #121214; /* Matches var(--bg-card) */
+            color: #fff;
+            padding: 10px;
+        }
+
+        /* Ensure browser uses dark color scheme for native elements like datepickers and selects */
+        :root { color-scheme: dark; }
+        body.light-mode { color-scheme: light; }
+
+        /* Responsive Utils */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1rem;
+        }
+
+        .table-responsive table {
+            min-width: 800px;
         }
 
         .action-btn {
@@ -396,15 +499,16 @@
             font-weight: 800;
             margin-bottom: 0.5rem;
             line-height: 1.2;
+            color: #ffffff; /* Blanco puro para legibilidad máxima */
         }
         
         .hero-content h1 span {
             color: var(--accent-red);
-            text-shadow: 0 0 20px var(--accent-red-glow);
+            text-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
         }
         
         .hero-content p {
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.75); /* Gris muy claro/blanco traslúcido */
             font-size: 1.1rem;
             max-width: 600px;
         }
@@ -435,11 +539,12 @@
             font-family: var(--font-display);
             font-size: 1.1rem;
             letter-spacing: 0.5px;
+            color: #ffffff !important; /* Forzar blanco para visibilidad */
         }
         
         .hero-date-text span {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: rgba(255,255,255,0.6) !important;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -762,37 +867,41 @@
 
         /* Footer */
         .footer {
-            padding: 2rem 3rem;
-            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.75rem;
+            color: #888;
+            background: #000;
+            margin-top: auto;
         }
         
-        .footer a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
+        .footer-copy {
+            letter-spacing: 0.2px;
         }
         
-        .footer a:hover {
-            color: var(--accent-red);
+        .footer-copy strong {
+            color: #fff;
+            font-weight: 700;
         }
         
         .footer-logo {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             font-family: var(--font-display);
-            font-weight: 800;
-            color: var(--text-main);
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
         .footer-logo i {
-            color: var(--accent-red);
+            color: #ff0000;
+            font-size: 1.1rem;
         }
 
         /* Dropdowns */
@@ -804,6 +913,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             width: 300px;
+            max-width: calc(100vw - 30px); /* Responsive width */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             opacity: 0;
             visibility: hidden;
@@ -899,17 +1009,71 @@
                 z-index: 999;
             }
             .sidebar.open { transform: translateX(0); }
-            .main-container { margin-left: 0; }
+            .main-container { 
+                margin-left: 0; 
+                max-width: 100%;
+            }
             .mobile-toggle { display: flex !important; }
             .search-bar { display: none; }
+            .header { padding: 0 1.5rem; }
         }
 
         @media (max-width: 600px) {
             .stats-grid { grid-template-columns: 1fr; }
-            .header { padding: 1rem; }
-            .content { padding: 1rem; }
-            .hero-card { padding: 2rem 1.5rem; }
-            .hero-date { flex-direction: column; gap: 0.5rem; text-align: right; font-size: 0.8rem; }
+            .header { 
+                padding: 0.6rem 0.8rem; /* Further reduced padding */
+                gap: 5px;
+            }
+            .header-actions {
+                gap: 0.5rem; /* Drastically reduced gap on mobile */
+            }
+            .header-title h2 { font-size: 0.8rem !important; letter-spacing: 0; } /* Smaller title */
+            .header-title i { font-size: 1rem !important; }
+            .mobile-toggle { margin-right: 0.2rem !important; font-size: 1.2rem !important; }
+            
+            .user-info { display: none; }
+            .user-profile { 
+                padding: 0.2rem; 
+                gap: 0;
+            }
+            .avatar, .avatar-fallback { width: 30px; height: 30px; font-size: 0.8rem; }
+            .action-btn { width: 32px; height: 32px; font-size: 0.8rem; margin-right: 0.2rem !important; }
+
+            .content { padding: 1rem; gap: 1.2rem; }
+            .hero-card { 
+                padding: 1.2rem; 
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            .hero-content h1 { font-size: 1.6rem; }
+            .hero-content p { font-size: 0.85rem; }
+            .hero-date { 
+                width: 100%;
+                justify-content: center;
+                padding: 0.6rem;
+            }
+            .hero-date i { font-size: 1.2rem; }
+            .hero-date-text strong { font-size: 0.9rem; }
+            
+            .footer {
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            
+            /* Global Modal Responsiveness */
+            div[id*="Modal"] > div {
+                width: 92% !important;
+                padding: 1.2rem !important;
+                margin: 5px !important;
+            }
+
+            .dropdown {
+                width: calc(100vw - 20px);
+                right: -10px;
+            }
         }
 
         .mobile-overlay {
@@ -929,14 +1093,17 @@
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar">
-        <div class="sidebar-brand">
+        <a href="{{ route('dashboard') }}" class="sidebar-brand" style="text-decoration: none; display: flex; align-items: center; gap: 15px;">
             <div class="brand-icon">
                 <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="brand-text">
-                MATRICULA<br><span style="color:var(--accent-red);font-weight:400;font-size:0.8rem;letter-spacing:2px">PREMIUM</span>
+                <div style="line-height: 1.1;">
+                    <span style="font-size: 1.1rem; font-weight: 900; color: #fff; letter-spacing: 0.5px;">PREMIER</span><br>
+                    <span style="color: var(--accent-red); font-weight: 700; font-size: 0.8rem; letter-spacing: 2.5px;">ACADEMY</span>
+                </div>
             </div>
-        </div>
+        </a>
 
         <div class="sidebar-menu">
             <div class="menu-section">Principal</div>
@@ -944,10 +1111,15 @@
                 <i class="fas fa-border-all"></i>
                 <span>Dashboard</span>
             </a>
+            @if(Auth::user()->isAdmin())
             <a href="{{ route('students') }}" class="menu-item {{ request()->routeIs('students') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
                 <span>Estudiantes</span>
-                <span class="menu-badge">{{ \App\Models\User::count() }}</span>
+                <span class="menu-badge">{{ \App\Models\User::where(function($q){ $q->where('role', 'student')->orWhereNull('role'); })->count() }}</span>
+            </a>
+            <a href="{{ route('teachers') }}" class="menu-item {{ request()->routeIs('teachers') ? 'active' : '' }}">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Docentes</span>
             </a>
             <a href="{{ route('classrooms') }}" class="menu-item {{ request()->routeIs('classrooms') ? 'active' : '' }}">
                 <i class="fas fa-laptop-house"></i>
@@ -959,6 +1131,20 @@
                 <i class="fas fa-book-open"></i>
                 <span>Carreras</span>
             </a>
+            @elseif(Auth::user()->isTeacher())
+            <div class="menu-section">Aula Virtual</div>
+            <a href="{{ route('teacher.courses') }}" class="menu-item {{ request()->routeIs('teacher.courses') ? 'active' : '' }}">
+                <i class="fas fa-chalkboard"></i>
+                <span>Mis Cursos</span>
+            </a>
+            <a href="{{ route('grades') }}" class="menu-item {{ request()->routeIs('grades') ? 'active' : '' }}">
+                <i class="fas fa-star"></i>
+                <span>Calificaciones</span>
+            </a>
+            @endif
+
+            @if(!Auth::user()->isTeacher())
+            <div class="menu-section">Trámites</div>
             <a href="{{ route('enrollments') }}" class="menu-item {{ request()->routeIs('enrollments') ? 'active' : '' }}">
                 <i class="fas fa-file-signature"></i>
                 <span>Inscripciones</span>
@@ -967,12 +1153,44 @@
                 <i class="fas fa-wallet"></i>
                 <span>Pagos</span>
             </a>
+            <a href="{{ route('grades') }}" class="menu-item {{ request()->routeIs('grades') ? 'active' : '' }}">
+                <i class="fas fa-star"></i>
+                <span>Notas</span>
+            </a>
+            @endif
+
+            <a href="{{ route('schedules') }}" class="menu-item {{ request()->routeIs('schedules','attendance.*') ? 'active' : '' }}">
+                <i class="fas fa-calendar-week"></i>
+                <span>Horarios</span>
+            </a>
+            <a href="{{ route('library.index') }}" class="menu-item {{ request()->routeIs('library.index') ? 'active' : '' }}">
+                <i class="fas fa-book-reader"></i>
+                <span>Biblioteca</span>
+            </a>
+            <a href="{{ route('virtual.classes') }}" class="menu-item {{ request()->routeIs('virtual.classes') ? 'active' : '' }}">
+                <i class="fas fa-video"></i>
+                <span>Clases Virtuales</span>
+            </a>
 
             <div class="menu-section">Sistema</div>
             <a href="{{ route('settings') }}" class="menu-item {{ request()->routeIs('settings') ? 'active' : '' }}">
                 <i class="fas fa-sliders-h"></i>
                 <span>Configuración</span>
             </a>
+            @if(Auth::user()->isAdmin())
+            <a href="{{ route('audit.logs') }}" class="menu-item {{ request()->routeIs('audit.logs') ? 'active' : '' }}">
+                <i class="fas fa-history"></i>
+                <span>Auditoría</span>
+            </a>
+            <a href="{{ route('reports.index') }}" class="menu-item {{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                <i class="fas fa-chart-line"></i>
+                <span>Reportes</span>
+            </a>
+            <a href="{{ route('courses.index') }}" class="menu-item {{ request()->routeIs('courses.index') ? 'active' : '' }}">
+                <i class="fas fa-chalkboard"></i>
+                <span>Cursos</span>
+            </a>
+            @endif
         </div>
 
         <div class="sidebar-footer">
@@ -991,7 +1209,10 @@
         <!-- Header -->
         <header class="header">
             <div class="header-title">
-                <h2>Panel <span>General</span></h2>
+                <a href="{{ route('dashboard') }}" style="display: flex; align-items: center; gap: 12px; margin-left: 0.5rem; text-decoration: none;">
+                    <i class="fas fa-graduation-cap" style="color: var(--accent-red); font-size: 1.4rem; filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.4));"></i>
+                    <h2 style="margin: 0; font-weight: 900; text-transform: uppercase; font-size: 1.15rem; letter-spacing: 0.5px; color: #fff;">PREMIER <span style="color: var(--accent-red);">ACADEMY</span></h2>
+                </a>
             </div>
             
             <div class="header-actions">
@@ -999,56 +1220,77 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 
-                <div class="search-bar">
+                <button class="action-btn" id="theme-toggle" title="Cambiar Modo" style="margin-right: 1rem; border: none; background: transparent; cursor: pointer;">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+
+                @if(Auth::user()->isAdmin())
+                <div class="search-bar" style="position: relative;">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar en el panel..." id="sidebarSearch">
+                    <input type="text" placeholder="Buscar Estudiantes o Carreras..." id="globalSearchInput" autocomplete="off">
+                    
+                    <!-- Search Results Dropdown -->
+                    <div class="dropdown" id="searchDropdown" style="width: 350px; right: auto; left: 0; max-height: 400px; overflow-y: auto;">
+                        <div class="dropdown-header" style="display: none;" id="searchHeader">Resultados de Búsqueda</div>
+                        <div id="searchResults">
+                            <div class="dropdown-item" style="justify-content: center; color: var(--text-muted); font-size: 0.8rem;">Escribe para buscar...</div>
+                        </div>
+                    </div>
                 </div>
+                @endif
                 
                 <div class="action-btn-container">
                     <div class="action-btn" id="notifBtn">
                         <i class="far fa-bell"></i>
                         @if($unread_notifications_count > 0)
-                        <span class="badge" style="background: var(--accent-red); position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface);">{{ $unread_notifications_count }}</span>
+                        <span class="badge" id="notifBadge" style="background: var(--accent-red); position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface);">{{ $unread_notifications_count }}</span>
                         @endif
                     </div>
                     
                     <!-- Notification Dropdown -->
                     <div class="dropdown" id="notifDropdown">
                         <div class="dropdown-header">
-                            Notificaciones <span class="count">{{ $unread_notifications_count }} Nuevas</span>
+                            Notificaciones <span class="count" id="notifCountText">{{ $unread_notifications_count }} Nuevas</span>
                         </div>
-                        @forelse($global_notifications as $notif)
-                        <div class="dropdown-item">
-                            <div class="dropdown-item-icon">
-                                @if($notif->type == 'success') <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
-                                @elseif($notif->type == 'warning') <i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>
-                                @else <i class="fas fa-info-circle"></i> @endif
+                        <div id="notificationsList">
+                            @forelse($global_notifications as $notif)
+                            <div class="dropdown-item notif-item" id="notif-{{ $notif->id }}" style="position: relative; padding-right: 2.5rem;">
+                                <div class="dropdown-item-icon">
+                                    @if($notif->type == 'success') <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+                                    @elseif($notif->type == 'warning') <i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>
+                                    @else <i class="fas fa-info-circle"></i> @endif
+                                </div>
+                                <div class="dropdown-item-content">
+                                    <div class="dropdown-item-title">
+                                        {{ $notif->title }}
+                                        @if(!$notif->user_id)
+                                            <span style="font-size: 0.55rem; background: var(--accent-red); color: #fff; padding: 1px 5px; border-radius: 4px; margin-left: 5px; font-weight: 800; vertical-align: middle;">SISTEMA</span>
+                                        @endif
+                                    </div>
+                                    <div class="dropdown-item-text">{{ $notif->message }}</div>
+                                </div>
+                                <button type="button" class="dismiss-notif" data-id="{{ $notif->id }}" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; transition: color 0.2s;">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
-                            <div class="dropdown-item-content">
-                                <div class="dropdown-item-title">{{ $notif->title }}</div>
-                                <div class="dropdown-item-text">{{ $notif->message }}</div>
+                            @empty
+                            <div class="dropdown-item empty-notif" style="justify-content: center; color: var(--text-muted); font-size: 0.8rem;">
+                                No tienes notificaciones nuevas
                             </div>
+                            @endforelse
                         </div>
-                        @empty
-                        <div class="dropdown-item" style="justify-content: center; color: var(--text-muted); font-size: 0.8rem;">
-                            No tienes notificaciones nuevas
-                        </div>
-                        @endforelse
                     </div>
                 </div>
                 
-                <div class="user-profile">
+                <div class="user-profile" onclick="window.location.href='{{ route('settings') }}'">
                     @if(Auth::user()->avatar)
-                        <!-- referrerpolicy added to fix Google Avatar loading issues -->
-                        <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="avatar" referrerpolicy="no-referrer" crossorigin="anonymous">
+                        <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="avatar" referrerpolicy="no-referrer">
                     @else
-                        <div class="avatar-fallback">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
+                        <div class="avatar-fallback">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                     @endif
                     <div class="user-info">
                         <span class="name">{{ explode(' ', Auth::user()->name)[0] }}</span>
-                        <span class="role">Estudiante</span>
+                        <span class="role">{{ ucfirst(Auth::user()->role) }}</span>
                     </div>
                 </div>
             </div>
@@ -1062,10 +1304,11 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer-logo">
-                <i class="fas fa-graduation-cap"></i> PANEL PREMIER
+                <i class="fas fa-graduation-cap"></i>
+                <span>PREMIER ACADEMY</span>
             </div>
             <div class="footer-copy">
-                &copy; 2026 Diseñado y Desarrollado por <a href="#">Angel Ordaya</a>. Todos los derechos reservados.
+                &copy; 2026 Diseñado y Desarrollado por <strong>Angel Ordaya</strong>. Todos los derechos reservados.
             </div>
         </footer>
         
@@ -1074,6 +1317,20 @@
     <!-- JavaScript for Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            
+            /* Theme Toggle Logic - Forced Dark Mode for Stability */
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) themeToggle.style.display = 'none'; // Ocultar por ahora para evitar clics accidentales
+            
+            // Garantizar que siempre inicie en modo oscuro
+            document.body.classList.remove('light-mode');
+            localStorage.setItem('theme-mode', 'dark');
+
+            // Auto-scroll sidebar to active item
+            const activeItem = document.querySelector('.menu-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ behavior: 'auto', block: 'center' });
+            }
             
             // Notification Dropdown Toggle
             const notifBtn = document.getElementById('notifBtn');
@@ -1091,45 +1348,231 @@
                 }
             });
 
-            // Search Filter Functionality
-            const searchInput = document.getElementById('searchInput');
-            const menuItems = document.querySelectorAll('.sidebar-menu .menu-item');
+            // GLOBAL SEARCH FUNCTIONALITY (AJAX) - Using DOM API for TrustedHTML compatibility
+            const searchInput = document.getElementById('globalSearchInput');
+            const searchDropdown = document.getElementById('searchDropdown');
+            const searchResults = document.getElementById('searchResults');
+            const searchHeader = document.getElementById('searchHeader');
             
-            searchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
+            let searchTimeout;
+            
+            function clearElement(el) {
+                while (el.firstChild) el.removeChild(el.firstChild);
+            }
+            
+            function createSearchItem(iconClass, title, subtitle, avatarUrl) {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
                 
-                menuItems.forEach(item => {
-                    const text = item.querySelector('span').textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
+                const iconWrap = document.createElement('div');
+                iconWrap.className = 'dropdown-item-icon';
+                
+                if (avatarUrl) {
+                    iconWrap.style.background = 'transparent';
+                    const img = document.createElement('img');
+                    img.src = avatarUrl;
+                    img.referrerPolicy = 'no-referrer';
+                    img.style.cssText = 'width:100%;height:100%;border-radius:50%;object-fit:cover;';
+                    iconWrap.appendChild(img);
+                } else {
+                    const icon = document.createElement('i');
+                    icon.className = iconClass;
+                    if (!avatarUrl && iconClass.includes('user-circle')) {
+                        icon.style.fontSize = '30px';
+                        iconWrap.style.background = 'transparent';
+                    }
+                    iconWrap.appendChild(icon);
+                }
+                
+                const content = document.createElement('div');
+                content.className = 'dropdown-item-content';
+                
+                const titleEl = document.createElement('div');
+                titleEl.className = 'dropdown-item-title';
+                titleEl.textContent = title;
+                content.appendChild(titleEl);
+                
+                if (subtitle) {
+                    const subEl = document.createElement('div');
+                    subEl.className = 'dropdown-item-text';
+                    subEl.textContent = subtitle;
+                    content.appendChild(subEl);
+                }
+                
+                item.appendChild(iconWrap);
+                item.appendChild(content);
+                return item;
+            }
+            
+            function createSectionLabel(text) {
+                const label = document.createElement('div');
+                label.style.cssText = 'padding:5px 15px;font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;font-weight:600;margin-top:5px;';
+                label.textContent = text;
+                return label;
+            }
+            
+            function createStatusMessage(text) {
+                const msg = document.createElement('div');
+                msg.className = 'dropdown-item';
+                msg.style.cssText = 'justify-content:center;color:var(--text-muted);font-size:0.8rem;';
+                msg.textContent = text;
+                return msg;
+            }
+            
+            if(searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.trim();
+                    
+                    clearTimeout(searchTimeout);
+                    
+                    if (query.length === 0) {
+                        searchDropdown.classList.remove('show');
+                        return;
+                    }
+                    
+                    searchDropdown.classList.add('show');
+                    clearElement(searchResults);
+                    
+                    const loadingMsg = document.createElement('div');
+                    loadingMsg.className = 'dropdown-item';
+                    loadingMsg.style.cssText = 'justify-content:center;color:var(--text-muted);font-size:0.8rem;';
+                    loadingMsg.textContent = 'Buscando...';
+                    const spinner = document.createElement('i');
+                    spinner.className = 'fas fa-spinner fa-spin';
+                    spinner.style.marginLeft = '5px';
+                    loadingMsg.appendChild(spinner);
+                    searchResults.appendChild(loadingMsg);
+                    
+                    searchTimeout = setTimeout(() => {
+                        fetch(`{{ route('search.global') }}?q=${encodeURIComponent(query)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                clearElement(searchResults);
+                                searchHeader.style.display = 'flex';
+                                
+                                let hasResults = false;
+                                
+                                // Render Students
+                                if (data.students && data.students.length > 0) {
+                                    hasResults = true;
+                                    searchResults.appendChild(createSectionLabel('Estudiantes'));
+                                    data.students.forEach(student => {
+                                        searchResults.appendChild(
+                                            createSearchItem(
+                                                'fas fa-user-graduate',
+                                                student.name,
+                                                student.email,
+                                                student.avatar || null
+                                            )
+                                        );
+                                    });
+                                }
+
+                                // Render Teachers
+                                if (data.teachers && data.teachers.length > 0) {
+                                    hasResults = true;
+                                    searchResults.appendChild(createSectionLabel('Docentes'));
+                                    data.teachers.forEach(teacher => {
+                                        searchResults.appendChild(
+                                            createSearchItem(
+                                                'fas fa-chalkboard-teacher',
+                                                teacher.name,
+                                                teacher.email,
+                                                teacher.avatar || null
+                                            )
+                                        );
+                                    });
+                                }
+                                
+                                // Render Careers
+                                if (data.careers && data.careers.length > 0) {
+                                    hasResults = true;
+                                    searchResults.appendChild(createSectionLabel('Carreras'));
+                                    data.careers.forEach(career => {
+                                        searchResults.appendChild(
+                                            createSearchItem('fas fa-book-open', career.name, null, null)
+                                        );
+                                    });
+                                }
+                                
+                                if (!hasResults) {
+                                    searchResults.appendChild(createStatusMessage('No se encontraron resultados'));
+                                }
+                            });
+                    }, 300);
+                });
+                
+                // Hide search on click outside
+                document.addEventListener('click', function(e) {
+                    if (!searchDropdown.contains(e.target) && e.target !== searchInput) {
+                        searchDropdown.classList.remove('show');
                     }
                 });
                 
-                // Hide section headers if all items below are hidden
-                const sections = document.querySelectorAll('.menu-section');
-                sections.forEach(section => {
-                    let hasVisibleItems = false;
-                    let nextElem = section.nextElementSibling;
+                // Show search if there's text on focus
+                searchInput.addEventListener('focus', function() {
+                    if (this.value.trim().length > 0) {
+                        searchDropdown.classList.add('show');
+                    }
+                });
+            }
+
+            // NOTIFICATIONS DISMISS FUNCTIONALITY (AJAX)
+            document.querySelectorAll('.dismiss-notif').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evitar cerrar el dropdown general
+                    const id = this.getAttribute('data-id');
+                    const item = document.getElementById('notif-' + id);
                     
-                    while (nextElem && !nextElem.classList.contains('menu-section')) {
-                        if (nextElem.style.display !== 'none') {
-                            hasVisibleItems = true;
-                            break;
+                    item.style.transition = 'all 0.3s';
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(20px)';
+                    
+                    fetch(`/notificaciones/${id}/leer`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
                         }
-                        nextElem = nextElem.nextElementSibling;
-                    }
-                    
-                    if (hasVisibleItems) {
-                        section.style.display = 'block';
-                    } else {
-                        section.style.display = 'none';
-                    }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        setTimeout(() => {
+                            item.remove();
+                            
+                            // Update counts
+                            const badge = document.getElementById('notifBadge');
+                            const countText = document.getElementById('notifCountText');
+                            
+                            if (badge) {
+                                if (data.unread_count > 0) {
+                                    badge.textContent = data.unread_count;
+                                } else {
+                                    badge.remove();
+                                }
+                            }
+                            
+                            if (countText) {
+                                countText.textContent = `${data.unread_count} Nuevas`;
+                            }
+                            
+                            // Check if list is empty
+                            if (document.querySelectorAll('.notif-item').length === 0) {
+                                const notifList = document.getElementById('notificationsList');
+                                clearElement(notifList);
+                                const emptyMsg = document.createElement('div');
+                                emptyMsg.className = 'dropdown-item empty-notif';
+                                emptyMsg.style.cssText = 'justify-content:center;color:var(--text-muted);font-size:0.8rem;';
+                                emptyMsg.textContent = 'No tienes notificaciones nuevas';
+                                notifList.appendChild(emptyMsg);
+                            }
+                        }, 300);
+                    });
                 });
             });
             
             // Add click effect to menu items
+            const menuItems = document.querySelectorAll('.sidebar-menu .menu-item');
             menuItems.forEach(item => {
                 item.addEventListener('click', function() {
                     menuItems.forEach(i => i.classList.remove('active'));
@@ -1156,15 +1599,28 @@
             });
         }
 
-        // Fix search input ID (updated from searchInput to sidebarSearch)
-        const sidebarSearchInput = document.getElementById('sidebarSearch');
-        if (sidebarSearchInput) {
-            sidebarSearchInput.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                menuItems.forEach(item => {
-                    const text = item.querySelector('span').textContent.toLowerCase();
-                    item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
-                });
+        // ===== MODAL FUNCTIONS =====
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+    <!-- PWA Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
             });
         }
     </script>

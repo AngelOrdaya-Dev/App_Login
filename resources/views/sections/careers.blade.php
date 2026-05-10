@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <h3 class="panel-title"><i class="fas fa-book-open"></i> Carreras Disponibles</h3>
         <button onclick="openModal('careerModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
             <i class="fas fa-plus"></i> Agregar Carrera
@@ -23,7 +23,7 @@
     
     <div style="display: flex; flex-direction: column; gap: 1rem;">
         @foreach($careers as $career)
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; transition: var(--transition-smooth); position: relative;">
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; transition: var(--transition-smooth); position: relative; flex-wrap: wrap; gap: 15px;">
             
             <div style="width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.02)); border: 1px solid rgba(255,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--accent-red); margin-right: 20px;">
                 <i class="fas fa-graduation-cap"></i>
@@ -57,7 +57,7 @@
 
 <!-- Modal Agregar Carrera -->
 <div id="careerModal" style="display: {{ $errors->any() ? 'flex' : 'none' }}; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); width: 450px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h3 style="font-family: var(--font-display); font-size: 1.4rem;"><i class="fas fa-plus-circle" style="color: var(--accent-red);"></i> Nueva Carrera</h3>
             <button onclick="closeModal('careerModal')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;"><i class="fas fa-times"></i></button>

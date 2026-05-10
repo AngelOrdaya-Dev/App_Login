@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <h3 class="panel-title"><i class="fas fa-chalkboard"></i> Gestión de Aulas</h3>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a href="{{ route('export.classrooms') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
                 <i class="fas fa-file-csv"></i> Exportar
             </a>
@@ -44,7 +44,7 @@
             </div>
             
             <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 0.75rem; color: var(--text-muted);">ID: #CL-{{ str_pad($classroom->id, 3, '0', STR_PAD_LEFT) }}</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">CÓDIGO: CL-{{ str_pad($classroom->id, 3, '0', STR_PAD_LEFT) }}</span>
             </div>
         </div>
         @endforeach
@@ -53,7 +53,7 @@
 
 <!-- Modal Agregar Aula -->
 <div id="classroomModal" style="display: {{ $errors->any() ? 'flex' : 'none' }}; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 9999; align-items: center; justify-content: center;">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); width: 450px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h3 style="font-family: var(--font-display); font-size: 1.3rem;"><i class="fas fa-plus-circle" style="color: var(--accent-red);"></i> Nueva Aula</h3>
             <button onclick="closeModal('classroomModal')" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;"><i class="fas fa-times"></i></button>
