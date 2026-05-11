@@ -47,7 +47,7 @@
         <div class="panel-header">
             <h3 class="panel-title"><i class="fas fa-history"></i> {{ Auth::user()->isAdmin() ? 'Registro General' : 'Mi Historial Reciente' }}</h3>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 600px; overflow-y: auto;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
             @forelse($enrollments as $enrollment)
                 <div style="padding: 1.2rem; border-left: 4px solid {{ $enrollment->status == 'approved' ? '#2ecc71' : ($enrollment->status == 'pending' ? '#f39c12' : '#e74c3c') }}; background: rgba(255,255,255,0.02); border-radius: 0 16px 16px 0; transition: var(--transition-smooth); position: relative;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
@@ -103,7 +103,7 @@
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Estudiante</label>
                     <select name="user_id" required class="modal-input" style="width: 100% !important; box-sizing: border-box !important;">
-                        @foreach(\App\Models\User::where('role', '!=', 'admin')->get() as $u)
+                        @foreach(\App\Models\User::where(function($q){ $q->where('role', 'student')->orWhereNull('role'); })->get() as $u)
                             <option value="{{ $u->id }}">{{ $u->name }}</option>
                         @endforeach
                     </select>

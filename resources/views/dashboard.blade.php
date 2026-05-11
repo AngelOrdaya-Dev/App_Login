@@ -176,34 +176,108 @@
                 <div class="dashboard-col">
                     @if(Auth::user()->isAdmin())
                         <!-- Admin Quick Insights -->
-                        <div class="panel" style="height: fit-content;">
-                            <div class="panel-header">
-                                <h3 class="panel-title"><i class="fas fa-microchip"></i> Acciones del Sistema</h3>
+                        <div class="panel" style="margin-bottom: 1rem;">
+                            <div class="panel-header" style="margin-bottom: 1.2rem;">
+                                <h3 class="panel-title"><i class="fas fa-rocket"></i> Gestión Rápida</h3>
                             </div>
-                            <div class="profile-details" style="padding: 1.5rem;">
-                                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                    <a href="{{ route('students') }}" class="btn-premium-logout" style="width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); color: var(--text-main); box-shadow: none;">
-                                        <i class="fas fa-user-plus"></i> Gestionar Estudiantes
-                                    </a>
-                                    <a href="{{ route('careers') }}" class="btn-premium-logout" style="width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); color: var(--text-main); box-shadow: none;">
-                                        <i class="fas fa-graduation-cap"></i> Configurar Carreras
-                                    </a>
-                                    <a href="{{ route('export.students') }}" class="btn-premium-logout" style="width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); color: var(--text-main); box-shadow: none;">
-                                        <i class="fas fa-file-export"></i> Exportar Base de Datos
-                                    </a>
-                                </div>
+                            <div class="quick-access-grid">
+                                <a href="{{ route('students') }}" class="mini-tile">
+                                    <i class="fas fa-user-graduate"></i>
+                                    <span>Alumnos</span>
+                                </a>
+                                <a href="{{ route('careers') }}" class="mini-tile">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Carreras</span>
+                                </a>
+                                <a href="{{ route('export.students') }}" class="mini-tile">
+                                    <i class="fas fa-file-export"></i>
+                                    <span>Exportar</span>
+                                </a>
+                                <a href="{{ route('reports.index') }}" class="mini-tile">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <span>Reportes</span>
+                                </a>
                             </div>
                         </div>
 
                         <!-- System Status Widget -->
-                        <div class="panel status-widget-container status-success">
-                            <i class="fas fa-server widget-bg-icon"></i>
-                            <div class="widget-icon-circle">
-                                <i class="fas fa-shield-check"></i>
+                        <div class="panel status-mini-card">
+                            <div class="status-header">
+                                <div class="status-indicator">
+                                    <div class="dot"></div>
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <div class="status-text">
+                                    <h4>Núcleo Operativo</h4>
+                                    <span>Sistema Estable - 99.9% Uptime</span>
+                                </div>
                             </div>
-                            <h3 class="widget-title">Sistema Operativo</h3>
-                            <p class="widget-description">Todos los servicios están funcionando correctamente. No se reportan incidencias críticas.</p>
+                            <div class="status-stats">
+                                <div class="s-stat"><strong>24ms</strong><span>Latencia</span></div>
+                                <div class="s-stat"><strong>Optima</strong><span>Carga</span></div>
+                            </div>
                         </div>
+
+                        <style>
+                            .quick-access-grid {
+                                display: grid; 
+                                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); 
+                                gap: 10px; 
+                                padding: 0.2rem 0;
+                            }
+                            .mini-tile {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 8px;
+                                padding: 1.2rem 0.8rem;
+                                background: rgba(255,255,255,0.02);
+                                border: 1px solid var(--border-light);
+                                border-radius: 16px;
+                                text-decoration: none;
+                                transition: all 0.2s ease;
+                            }
+                            .mini-tile i { font-size: 1.2rem; color: var(--accent-red); }
+                            .mini-tile span { font-size: 0.75rem; font-weight: 600; color: var(--text-main); }
+                            .mini-tile:hover {
+                                background: var(--bg-surface-hover);
+                                border-color: var(--accent-red);
+                                transform: translateY(-2px);
+                            }
+
+                            .status-mini-card {
+                                padding: 1rem 1.2rem !important;
+                                border: 1px solid rgba(46, 204, 113, 0.2) !important;
+                                background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), transparent) !important;
+                            }
+                            .status-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.8rem; }
+                            .status-indicator {
+                                width: 38px; height: 38px;
+                                border-radius: 10px;
+                                background: rgba(46, 204, 113, 0.1);
+                                color: #2ecc71;
+                                display: flex; align-items: center; justify-content: center;
+                                position: relative;
+                            }
+                            .status-indicator .dot {
+                                position: absolute; top: -2px; right: -2px;
+                                width: 8px; height: 8px;
+                                background: #2ecc71; border-radius: 50%;
+                                box-shadow: 0 0 8px #2ecc71;
+                            }
+                            .status-text h4 { margin: 0; font-size: 0.9rem; font-family: var(--font-display); }
+                            .status-text span { font-size: 0.65rem; color: var(--text-muted); }
+                            .status-stats { display: flex; gap: 20px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+                            .s-stat { display: flex; flex-direction: column; }
+                            .s-stat strong { font-size: 0.8rem; color: var(--text-main); }
+                            .s-stat span { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+
+                            @media (max-width: 400px) {
+                                .quick-access-grid { grid-template-columns: 1fr 1fr; }
+                                .mini-tile { padding: 1rem 0.5rem; }
+                            }
+                        </style>
                     @else
                         <!-- Student Info Panel -->
                         <div class="panel" style="height: fit-content;">
@@ -291,9 +365,9 @@
                     <!-- Chart Panel: Registros Mensuales -->
                     <div class="panel">
                         <div class="panel-header">
-                            <h3 class="panel-title"><i class="fas fa-chart-line"></i> Actividad de Registros</h3>
+                            <h3 class="panel-title"><i class="fas fa-chart-line"></i> Actividad</h3>
                         </div>
-                        <div style="padding: 1.5rem; height: 350px;">
+                        <div class="chart-wrapper">
                             <canvas id="monthlyRegistrationsChart"></canvas>
                         </div>
                     </div>
@@ -301,13 +375,25 @@
                     <!-- Chart Panel: Estudiantes por Carrera -->
                     <div class="panel">
                         <div class="panel-header">
-                            <h3 class="panel-title"><i class="fas fa-chart-bar"></i> Distribución por Carrera</h3>
+                            <h3 class="panel-title"><i class="fas fa-chart-pie"></i> Distribución</h3>
                         </div>
-                        <div style="padding: 1.5rem; height: 400px;">
+                        <div class="chart-wrapper" style="height: 300px;">
                             <canvas id="careerDistributionChart"></canvas>
                         </div>
                     </div>
                 </div>
+
+                <style>
+                    .chart-wrapper {
+                        padding: 1rem; 
+                        height: 320px; 
+                        width: 100%;
+                        position: relative;
+                    }
+                    @media (max-width: 600px) {
+                        .chart-wrapper { height: 260px; padding: 0.5rem; }
+                    }
+                </style>
             </div>
 
             <!-- Conditional Grid Section -->
@@ -611,14 +697,15 @@
                                     datasets: [{
                                         label: 'Nuevos Alumnos',
                                         data: @json($monthlyStats['data']),
-                                        borderColor: colors.accent,
-                                        backgroundColor: 'rgba(255, 0, 0, 0.1)',
-                                        borderWidth: 3,
+                                        borderColor: '#ff3e3e',
+                                        backgroundColor: 'rgba(255, 62, 62, 0.05)',
+                                        borderWidth: 2,
                                         fill: true,
-                                        tension: 0.4,
-                                        pointBackgroundColor: colors.accent,
+                                        tension: 0.5,
+                                        pointBackgroundColor: '#ff3e3e',
                                         pointBorderColor: '#fff',
-                                        pointHoverRadius: 6
+                                        pointRadius: isMobile ? 3 : 5,
+                                        pointHoverRadius: 7
                                     }]
                                 },
                                 options: {
@@ -628,12 +715,12 @@
                                     scales: {
                                         y: {
                                             beginAtZero: true,
-                                            grid: { color: colors.grid },
-                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                            grid: { color: colors.grid, drawBorder: false },
+                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
                                         },
                                         x: {
                                             grid: { display: false },
-                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
                                         }
                                     }
                                 }
@@ -659,15 +746,15 @@
                                 options: {
                                     responsive: true,
                                     maintainAspectRatio: false,
-                                    cutout: '75%',
+                                    cutout: isMobile ? '65%' : '75%',
                                     plugins: { 
                                         legend: { 
-                                            display: !isMobile,
-                                            position: 'right',
+                                            display: true,
+                                            position: isMobile ? 'bottom' : 'right',
                                             labels: {
                                                 color: colors.text,
-                                                font: { family: 'Outfit', size: 11, weight: '600' },
-                                                padding: 20,
+                                                font: { family: 'Outfit', size: isMobile ? 10 : 11, weight: '600' },
+                                                padding: isMobile ? 10 : 20,
                                                 usePointStyle: true,
                                                 pointStyle: 'circle'
                                             }

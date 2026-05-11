@@ -6,6 +6,8 @@
     <title>Registro de Estudiante</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="/Logo.jpeg">
+    <link rel="shortcut icon" href="/Logo.jpeg" type="image/x-icon">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Roboto', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #000; background-image: radial-gradient(circle at 0% 0%, rgba(255, 0, 0, 0.12) 0%, transparent 50%), radial-gradient(circle at 100% 100%, rgba(255, 0, 0, 0.08) 0%, transparent 50%); padding: 1.5rem; color: #fff; }

@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;">
+    <div class="panel-header">
         <h3 class="panel-title"><i class="fas fa-chalkboard-teacher"></i> Gestión de Docentes</h3>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 300px;">
-            <button onclick="openModal('teacherModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
+        <div class="panel-header-actions">
+            <button onclick="openModal('teacherModal')" class="btn-premium-logout">
                 <i class="fas fa-user-plus"></i> Registrar Docente
             </button>
         </div>
@@ -17,7 +17,7 @@
         </div>
     @endif
     
-    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
+    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 16px;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-light);">
                 <tr>

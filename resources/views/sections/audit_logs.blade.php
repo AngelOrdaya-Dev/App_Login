@@ -2,12 +2,14 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="margin-bottom: 2rem;">
-        <h3 class="panel-title"><i class="fas fa-history"></i> Registro de Auditoría</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Historial detallado de todas las acciones críticas realizadas en la plataforma.</p>
+    <div class="panel-header" style="flex-direction: column; align-items: flex-start;">
+        <div>
+            <h3 class="panel-title"><i class="fas fa-history"></i> Registro de Auditoría</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem; max-width: 500px;">Historial detallado de todas las acciones críticas realizadas en la plataforma.</p>
+        </div>
     </div>
 
-    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
+    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 16px;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
             <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-light);">
                 <tr>

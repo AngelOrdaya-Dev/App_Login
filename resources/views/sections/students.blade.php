@@ -2,17 +2,17 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem;">
+    <div class="panel-header">
         <h3 class="panel-title"><i class="fas fa-users"></i> Gestión de Estudiantes</h3>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; flex: 1; justify-content: flex-end; min-width: 300px;">
-            <div style="position: relative; flex: 1; min-width: 200px; max-width: 300px;">
+        <div class="panel-header-actions">
+            <div style="position: relative; flex: 2; min-width: 180px;">
                 <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-                <input type="text" id="tableSearch" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 100%;">
+                <input type="text" id="tableSearch" placeholder="Buscar..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 100%;">
             </div>
-            <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+            <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 100px;">
                 <i class="fas fa-file-csv"></i> Exportar
             </a>
-            <button onclick="openModal('studentModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
+            <button onclick="openModal('studentModal')" class="btn-premium-logout" style="padding: 8px 15px; font-size: 0.8rem;">
                 <i class="fas fa-user-plus"></i> Registrar
             </button>
         </div>
@@ -24,7 +24,7 @@
         </div>
     @endif
     
-    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden;">
+    <div class="table-responsive" style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 16px;">
         <table style="width: 100%; border-collapse: collapse; text-align: left;" id="studentsTable">
             <thead style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-light);">
                 <tr>

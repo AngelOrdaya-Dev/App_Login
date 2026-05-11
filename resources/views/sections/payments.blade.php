@@ -17,7 +17,7 @@
             <div style="background: var(--bg-card); border: 1px solid #2ecc71; border-radius: 20px; padding: 2.5rem; text-align: center; box-shadow: 0 10px 30px rgba(46,204,113,0.05); position: relative; overflow: hidden;">
                 <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Total Recaudado</h4>
-                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; color: #2ecc71; line-height: 1; margin-bottom: 0.5rem;">
+                <div style="font-family: var(--font-display); font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; color: #2ecc71; line-height: 1; margin-bottom: 0.5rem;">
                     ${{ number_format(\App\Models\Payment::where('status', 'paid')->sum('amount'), 2) }}
                 </div>
                 <p style="color: var(--text-muted); font-size: 0.85rem;">Consolidado de todos los pagos aprobados</p>
@@ -26,7 +26,7 @@
             <div style="background: var(--bg-card); border: 1px solid #f1c40f; border-radius: 20px; padding: 2.5rem; text-align: center; box-shadow: 0 10px 30px rgba(241,196,15,0.05); position: relative; overflow: hidden;">
                 <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(241,196,15,0.1) 0%, transparent 70%); border-radius: 50%;"></div>
                 <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Cuentas por Cobrar</h4>
-                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; color: #f1c40f; line-height: 1; margin-bottom: 0.5rem;">
+                <div style="font-family: var(--font-display); font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; color: #f1c40f; line-height: 1; margin-bottom: 0.5rem;">
                     ${{ number_format(\App\Models\Payment::where('status', 'pending')->sum('amount'), 2) }}
                 </div>
                 <p style="color: var(--text-muted); font-size: 0.85rem;">Total de pagos en espera de confirmación</p>
@@ -37,7 +37,7 @@
                 <div style="position: absolute; top: -50px; left: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(255,0,0,0.2) 0%, transparent 70%); border-radius: 50%;"></div>
                 
                 <h4 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem;">Deuda Total Pendiente</h4>
-                <div style="font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 0.5rem;">${{ number_format($balance, 2) }}</div>
+                <div style="font-family: var(--font-display); font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 0.5rem;">${{ number_format($balance, 2) }}</div>
                 
                 @if($balance == 0)
                     <p style="color: #2ecc71; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;"><i class="fas fa-check-circle"></i> Estás al día con tus pagos</p>
@@ -141,34 +141,34 @@
     @if(Auth::user()->isAdmin())
         <!-- Full Payment List for Admin (Visible by default) -->
         <div style="margin-top: 3rem;">
-            <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 1.5rem;"><i class="fas fa-list-ul"></i> Registro Detallado de Transacciones</h4>
-            <div style="background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--border-light); overflow: hidden;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <h4 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 1.5rem;"><i class="fas fa-list-ul"></i> Registro Detallado</h4>
+            <div class="table-responsive" style="background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--border-light); overflow-x: auto;">
+                <table style="width: 100%; min-width: 800px; border-collapse: collapse; font-size: 0.85rem;">
                     <thead style="background: rgba(255,255,255,0.03); text-align: left;">
                         <tr>
-                            <th style="padding: 1.2rem;">Estudiante</th>
-                            <th style="padding: 1.2rem;">Descripción</th>
-                            <th style="padding: 1.2rem;">Monto</th>
-                            <th style="padding: 1.2rem;">Estado</th>
-                            <th style="padding: 1.2rem;">Fecha</th>
-                            <th style="padding: 1.2rem;">Acciones</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Estudiante</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Descripción</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Monto</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Estado</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Fecha</th>
+                            <th style="padding: 1.2rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($payments as $payment)
-                            <tr style="border-bottom: 1px solid var(--border-light);">
+                            <tr style="border-bottom: 1px solid var(--border-light); transition: all 0.2s;">
                                 <td style="padding: 1.2rem;"><strong>{{ $payment->user->name }}</strong></td>
                                 <td style="padding: 1.2rem; color: var(--text-muted);">{{ $payment->description }}</td>
-                                <td style="padding: 1.2rem; font-weight: 700;">${{ number_format($payment->amount, 2) }}</td>
+                                <td style="padding: 1.2rem; font-weight: 700; color: var(--text-main);">${{ number_format($payment->amount, 2) }}</td>
                                 <td style="padding: 1.2rem;">
-                                    <span style="font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; background: {{ $payment->status == 'paid' ? 'rgba(46, 204, 113, 0.1)' : 'rgba(241, 196, 15, 0.1)' }}; color: {{ $payment->status == 'paid' ? '#2ecc71' : '#f1c40f' }};">
+                                    <span style="font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; background: {{ $payment->status == 'paid' ? 'rgba(46, 204, 113, 0.1)' : 'rgba(241, 196, 15, 0.1)' }}; color: {{ $payment->status == 'paid' ? '#2ecc71' : '#f1c40f' }}; font-weight: 700;">
                                         {{ strtoupper($payment->status) }}
                                     </span>
                                 </td>
                                 <td style="padding: 1.2rem; color: var(--text-muted);">{{ $payment->created_at->format('d/m/Y') }}</td>
                                 <td style="padding: 1.2rem; display: flex; gap: 8px;">
                                     <a href="{{ route('payments.pdf', $payment->id) }}" class="action-btn" title="Descargar Recibo"><i class="fas fa-file-pdf"></i></a>
-                                    @if(Auth::user()->isAdmin() && $payment->status == 'pending')
+                                    @if($payment->status == 'pending')
                                         <form action="{{ route('payments.approve', $payment->id) }}" method="POST" style="display: inline;">
                                             @csrf
                                             <button type="submit" class="action-btn" title="Confirmar Pago" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2);">

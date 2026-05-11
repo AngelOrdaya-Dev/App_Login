@@ -2,10 +2,10 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="panel-title"><i class="fas fa-chart-pie"></i> Dashboard Financiero y Académico</h3>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">
-            Actualizado: {{ now()->format('d/m/Y H:i') }}
+    <div class="panel-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 1rem;">
+        <h3 class="panel-title"><i class="fas fa-chart-pie"></i> Dashboard Financiero</h3>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            <i class="fas fa-sync-alt"></i> {{ now()->format('d/m/Y H:i') }}
         </div>
     </div>
 
@@ -45,23 +45,29 @@
     </div>
 
     <!-- Charts Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
         <!-- Monthly Revenue Chart -->
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 20px;">
-            <h5 style="margin-bottom: 1.5rem; color: var(--text-main);"><i class="fas fa-chart-line" style="color: #2ecc71;"></i> Ingresos Mensuales (S/)</h5>
-            <canvas id="revenueChart" style="max-height: 300px;"></canvas>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.2rem; border-radius: 20px;">
+            <h5 style="margin-bottom: 1.2rem; color: var(--text-main); font-size: 0.9rem;"><i class="fas fa-chart-line" style="color: #2ecc71;"></i> Ingresos Mensuales</h5>
+            <div style="height: 250px; width: 100%; position: relative;">
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
 
         <!-- Career Distribution Chart -->
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 20px;">
-            <h5 style="margin-bottom: 1.5rem; color: var(--text-main);"><i class="fas fa-users" style="color: #3498db;"></i> Alumnos por Carrera</h5>
-            <canvas id="careerChart" style="max-height: 300px;"></canvas>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.2rem; border-radius: 20px;">
+            <h5 style="margin-bottom: 1.2rem; color: var(--text-main); font-size: 0.9rem;"><i class="fas fa-users" style="color: #3498db;"></i> Alumnos por Carrera</h5>
+            <div style="height: 250px; width: 100%; position: relative;">
+                <canvas id="careerChart"></canvas>
+            </div>
         </div>
 
         <!-- Payment Status Chart -->
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.5rem; border-radius: 20px;">
-            <h5 style="margin-bottom: 1.5rem; color: var(--text-main);"><i class="fas fa-receipt" style="color: #f1c40f;"></i> Estado de Pagos</h5>
-            <canvas id="statusChart" style="max-height: 300px;"></canvas>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.2rem; border-radius: 20px;">
+            <h5 style="margin-bottom: 1.2rem; color: var(--text-main); font-size: 0.9rem;"><i class="fas fa-receipt" style="color: #f1c40f;"></i> Estado de Pagos</h5>
+            <div style="height: 250px; width: 100%; position: relative;">
+                <canvas id="statusChart"></canvas>
+            </div>
         </div>
 
         <!-- Growth Info -->
@@ -109,8 +115,21 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
-                    x: { grid: { display: false }, ticks: { color: '#888' } }
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', font: { size: 10 } } },
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { 
+                            color: '#888', 
+                            font: { size: 9 },
+                            maxRotation: 0,
+                            autoSkip: true,
+                            callback: function(value) {
+                                let label = this.getLabelForValue(value);
+                                if (label.length > 8) return label.substring(0, 8) + '...';
+                                return label;
+                            }
+                        } 
+                    }
                 }
             }
         });
@@ -138,8 +157,21 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
-                    x: { grid: { display: false }, ticks: { color: '#888' } }
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', font: { size: 10 } } },
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { 
+                            color: '#888', 
+                            font: { size: 9 },
+                            maxRotation: 0,
+                            autoSkip: true,
+                            callback: function(value) {
+                                let label = this.getLabelForValue(value);
+                                if (label.length > 8) return label.substring(0, 8) + '...';
+                                return label;
+                            }
+                        } 
+                    }
                 }
             }
         });

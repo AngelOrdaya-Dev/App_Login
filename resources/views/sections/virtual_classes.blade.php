@@ -6,7 +6,7 @@
         <h3 class="panel-title"><i class="fas fa-video"></i> Salón de Clases Virtuales</h3>
     </div>
 
-    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 2rem; min-height: 600px;">
+    <div class="virtual-classes-grid">
         <!-- Course Selection Sidebar -->
         <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: 20px; padding: 1.5rem;">
             <h5 style="color: var(--text-main); margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Mis Cursos Activos</h5>
@@ -42,6 +42,23 @@
 </div>
 
 <style>
+    .virtual-classes-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        min-height: 600px;
+    }
+
+    @media (max-width: 900px) {
+        .virtual-classes-grid {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+        #jitsi-container {
+            height: 400px;
+        }
+    }
+
     .course-room-card:hover {
         border-color: var(--accent-red) !important;
         background: var(--bg-surface-hover) !important;

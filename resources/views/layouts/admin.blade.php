@@ -16,6 +16,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="icon" type="image/jpeg" href="/Logo.jpeg">
+    <link rel="shortcut icon" href="/Logo.jpeg" type="image/x-icon">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Meta referrer for Google Avatar images -->
@@ -212,6 +214,7 @@
 
         .sidebar-footer {
             padding: 1.5rem;
+            padding-bottom: 3.5rem;
             border-top: 1px solid var(--border-color);
         }
 
@@ -645,6 +648,24 @@
             line-height: 1;
         }
 
+        /* Tables Responsive */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table-responsive table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        .table-responsive th, 
+        .table-responsive td {
+            white-space: nowrap;
+        }
+
         /* Complex Grid Section */
         .dashboard-grid {
             display: grid;
@@ -653,10 +674,11 @@
         }
 
         .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
             border-radius: 24px;
             padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
         }
 
         .panel-header {
@@ -664,6 +686,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .panel-title {
@@ -672,12 +696,49 @@
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            min-width: max-content;
         }
         
         .panel-title i {
             color: var(--accent-red);
             text-shadow: 0 0 10px var(--accent-red-glow);
+            flex-shrink: 0;
+        }
+
+        .panel-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .panel {
+                padding: 1.25rem;
+                border-radius: 16px;
+            }
+            .panel-title {
+                font-size: 1rem !important;
+                white-space: normal;
+                line-height: 1.4;
+            }
+            .panel-header {
+                gap: 0.8rem !important;
+            }
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.2rem;
+            }
+            .panel-header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .panel-header-actions > * {
+                flex: 1;
+                min-width: 120px;
+            }
         }
 
         /* Profile Details Panel */
@@ -841,22 +902,23 @@
         }
         
         .btn-premium-logout {
-            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, var(--accent-red), #990000);
             color: #fff;
             border: none;
-            padding: 1rem;
-            border-radius: 14px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
             font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 0.9rem;
             gap: 10px;
             cursor: pointer;
             transition: var(--transition-smooth);
-            box-shadow: 0 10px 25px var(--accent-red-faded);
+            box-shadow: 0 8px 20px var(--accent-red-faded);
+            text-decoration: none;
+            white-space: nowrap;
         }
         
         .btn-premium-logout:hover {
@@ -905,6 +967,28 @@
         }
 
         /* Dropdowns */
+        .notifications-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            margin-top: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .notifications-dropdown {
+                width: 280px;
+                right: -50px;
+            }
+        }
         .dropdown {
             position: absolute;
             top: 100%;
