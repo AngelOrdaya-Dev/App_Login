@@ -1,7 +1,8 @@
 services:
   - type: web
-    name: app-login-premier
-    env: php
+    name: app-login-premier-xdangel
+    runtime: php
+    plan: free
     buildCommand: |
       composer install --no-dev --optimize-autoloader
       npm ci
@@ -20,23 +21,23 @@ services:
         value: pgsql
       - key: DB_HOST
         fromDatabase:
-          name: app-login-db
+          name: app-login-db-xdangel
           property: host
       - key: DB_PORT
         fromDatabase:
-          name: app-login-db
+          name: app-login-db-xdangel
           property: port
       - key: DB_DATABASE
         fromDatabase:
-          name: app-login-db
+          name: app-login-db-xdangel
           property: database
       - key: DB_USERNAME
         fromDatabase:
-          name: app-login-db
+          name: app-login-db-xdangel
           property: user
       - key: DB_PASSWORD
         fromDatabase:
-          name: app-login-db
+          name: app-login-db-xdangel
           property: password
       - key: SESSION_DRIVER
         value: database
@@ -66,5 +67,5 @@ services:
         value: "Premier Academy"
 
 databases:
-  - name: app-login-db
+  - name: app-login-db-xdangel
     plan: free
