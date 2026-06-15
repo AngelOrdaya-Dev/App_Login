@@ -59,6 +59,9 @@ services:
         value: xdangel755@gmail.com
       - key: MAIL_FROM_NAME
         value: "Premier Academy"
+      - key: APP_OWNER_EMAIL
+        value: xdangel755@gmail.com
+
 
 databases:
   - name: app-login-db-xdangel

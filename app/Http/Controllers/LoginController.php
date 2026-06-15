@@ -101,12 +101,20 @@ class LoginController extends Controller
 
             if ($user) {
                 // Actualizar datos existentes
-                $user->update([
+                $updateData = [
                     $providerIdField => $socialUser->getId(),
                     'avatar' => $socialUser->getAvatar(),
-                ]);
+                ];
+                // Si es el correo del dueño de la app, garantizar rol admin
+                $ownerEmail = env('APP_OWNER_EMAIL', 'xdangel755@gmail.com');
+                if ($user->email === $ownerEmail && $user->role !== 'admin') {
+                    $updateData['role'] = 'admin';
+                }
+                $user->update($updateData);
             } else {
                 // Crear nuevo usuario
+                $ownerEmail = env('APP_OWNER_EMAIL', 'xdangel755@gmail.com');
+                $role = ($socialUser->getEmail() === $ownerEmail) ? 'admin' : null;
                 $user = User::create([
                     'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'Usuario',
                     'email' => $socialUser->getEmail(),
@@ -114,7 +122,8 @@ class LoginController extends Controller
                     'avatar' => $socialUser->getAvatar(),
                     'password' => null,
                     'career_id' => null,
-                    'terms_accepted' => true
+                    'terms_accepted' => true,
+                    'role' => $role,
                 ]);
             }
 

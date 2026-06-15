@@ -12,6 +12,7 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Crear cuenta admin por defecto
         \App\Models\User::firstOrCreate(
             ['email' => 'admin@admin.com'],
             [
@@ -21,5 +22,9 @@ class AdminUserSeeder extends Seeder
                 'terms_accepted' => true,
             ]
         );
+
+        // Promover la cuenta del dueño de la app a admin (si ya existe por Social Login)
+        $ownerEmail = env('APP_OWNER_EMAIL', 'xdangel755@gmail.com');
+        \App\Models\User::where('email', $ownerEmail)->update(['role' => 'admin']);
     }
 }
