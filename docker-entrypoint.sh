@@ -6,8 +6,9 @@ php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 
-# Run migrations
+# Run migrations and seed data
 php artisan migrate --force
+php artisan db:seed --force
 
 # Re-create cache for production performance
 php artisan config:cache
