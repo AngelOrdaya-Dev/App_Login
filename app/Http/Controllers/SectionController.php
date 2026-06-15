@@ -461,16 +461,30 @@ class SectionController extends Controller
     {
         if (!Auth::user()->isAdmin()) abort(403);
 
-        // Ingresos totales por mes
-        $monthlyRevenue = Payment::where('status', 'paid')
-            ->select(
-                DB::raw('SUM(amount) as total'),
-                DB::raw("DATE_FORMAT(updated_at, '%M') as month"),
-                DB::raw("MONTH(updated_at) as month_num")
-            )
-            ->groupBy('month_num', 'month')
-            ->orderBy('month_num')
-            ->get();
+        $driver = DB::getDriverName();
+
+        // Ingresos totales por mes (compatible MySQL y PostgreSQL)
+        if ($driver === 'pgsql') {
+            $monthlyRevenue = Payment::where('status', 'paid')
+                ->select(
+                    DB::raw('SUM(amount) as total'),
+                    DB::raw("TO_CHAR(updated_at, 'Month') as month"),
+                    DB::raw("EXTRACT(MONTH FROM updated_at) as month_num")
+                )
+                ->groupBy('month_num', 'month')
+                ->orderBy('month_num')
+                ->get();
+        } else {
+            $monthlyRevenue = Payment::where('status', 'paid')
+                ->select(
+                    DB::raw('SUM(amount) as total'),
+                    DB::raw("DATE_FORMAT(updated_at, '%M') as month"),
+                    DB::raw("MONTH(updated_at) as month_num")
+                )
+                ->groupBy('month_num', 'month')
+                ->orderBy('month_num')
+                ->get();
+        }
 
         // Distribución de estados de pago
         $paymentStatus = Payment::select('status', DB::raw('count(*) as count'))
