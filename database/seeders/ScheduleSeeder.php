@@ -17,10 +17,8 @@ class ScheduleSeeder extends Seeder
         $career = Career::firstOrCreate(['name' => 'Ingeniería de Software']);
         
         $course = Course::firstOrCreate(
-            ['code' => 'CUR-003'],
+            ['name' => 'Desarrollo Web Fullstack', 'career_id' => $career->id],
             [
-                'name' => 'Desarrollo Web Fullstack',
-                'career_id' => $career->id,
                 'teacher_id' => $teacher ? $teacher->id : null,
                 'credits' => 6
             ]
