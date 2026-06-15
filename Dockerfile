@@ -26,9 +26,9 @@ RUN npm install && npm run build && rm -rf node_modules
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Cache Laravel config
-RUN php artisan config:clear \
-    && php artisan route:cache \
-    && php artisan view:cache
+# Copy startup script to execute migrations and seeding automatically
+USER root
+COPY --chmod=755 docker-entrypoint.sh /etc/entrypoint.d/99-docker-entrypoint.sh
 
 USER www-data
+

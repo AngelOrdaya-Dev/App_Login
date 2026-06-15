@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Go to the application root directory
+cd /var/www/html
+
 # Clear configuration cache first to prevent old env variables from being used
 php artisan config:clear
 php artisan cache:clear
@@ -17,3 +20,4 @@ php artisan view:cache
 
 # Link storage
 php artisan storage:link || true
+

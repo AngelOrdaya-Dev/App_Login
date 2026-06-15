@@ -23,22 +23,23 @@ class AcademicGradesSeeder extends Seeder
         ];
 
         foreach ($courses as $c) {
-            $course = \App\Models\Course::create([
-                'name' => $c['name'],
-                'career_id' => $career->id,
-                'credits' => $c['credits']
-            ]);
+            $course = \App\Models\Course::firstOrCreate(
+                ['name' => $c['name'], 'career_id' => $career->id],
+                ['credits' => $c['credits']]
+            );
 
             // Asignar nota al admin (como estudiante de prueba)
             $admin = \App\Models\User::where('email', 'admin@admin.com')->first();
             if ($admin) {
-                $gradeVal = rand(10, 20);
-                \App\Models\Grade::create([
-                    'user_id' => $admin->id,
-                    'course_id' => $course->id,
-                    'grade' => $gradeVal,
-                    'status' => $gradeVal >= 11 ? 'pass' : 'fail'
-                ]);
+                if (!\App\Models\Grade::where('user_id', $admin->id)->where('course_id', $course->id)->exists()) {
+                    $gradeVal = rand(10, 20);
+                    \App\Models\Grade::create([
+                        'user_id' => $admin->id,
+                        'course_id' => $course->id,
+                        'grade' => $gradeVal,
+                        'status' => $gradeVal >= 11 ? 'pass' : 'fail'
+                    ]);
+                }
             }
         }
     }

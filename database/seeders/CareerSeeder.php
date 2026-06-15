@@ -23,7 +23,7 @@ class CareerSeeder extends Seeder
         ];
 
         foreach ($careers as $career) {
-            Career::create(['name' => $career]);
+            Career::firstOrCreate(['name' => $career]);
         }
     }
 }

@@ -17,35 +17,43 @@ class AcademicDataSeeder extends Seeder
 
         if ($admin) {
             // Pagos de ejemplo
-            \App\Models\Payment::create([
-                'user_id' => $admin->id,
-                'amount' => 150.00,
-                'description' => 'Matrícula Ciclo 2026-I',
-                'status' => 'paid',
-                'payment_date' => now(),
-            ]);
+            if (!\App\Models\Payment::where('user_id', $admin->id)->where('description', 'Matrícula Ciclo 2026-I')->exists()) {
+                \App\Models\Payment::create([
+                    'user_id' => $admin->id,
+                    'amount' => 150.00,
+                    'description' => 'Matrícula Ciclo 2026-I',
+                    'status' => 'paid',
+                    'payment_date' => now(),
+                ]);
+            }
 
-            \App\Models\Payment::create([
-                'user_id' => $admin->id,
-                'amount' => 25.00,
-                'description' => 'Derecho de Carnet Universitario',
-                'status' => 'pending',
-            ]);
+            if (!\App\Models\Payment::where('user_id', $admin->id)->where('description', 'Derecho de Carnet Universitario')->exists()) {
+                \App\Models\Payment::create([
+                    'user_id' => $admin->id,
+                    'amount' => 25.00,
+                    'description' => 'Derecho de Carnet Universitario',
+                    'status' => 'pending',
+                ]);
+            }
 
             // Inscripciones de ejemplo
-            \App\Models\Enrollment::create([
-                'user_id' => $admin->id,
-                'career_id' => $career->id,
-                'type' => 'regular',
-                'status' => 'approved',
-            ]);
+            if (!\App\Models\Enrollment::where('user_id', $admin->id)->where('career_id', $career->id)->where('type', 'regular')->exists()) {
+                \App\Models\Enrollment::create([
+                    'user_id' => $admin->id,
+                    'career_id' => $career->id,
+                    'type' => 'regular',
+                    'status' => 'approved',
+                ]);
+            }
 
-            \App\Models\Enrollment::create([
-                'user_id' => $admin->id,
-                'career_id' => $career->id,
-                'type' => 'reingreso',
-                'status' => 'pending',
-            ]);
+            if (!\App\Models\Enrollment::where('user_id', $admin->id)->where('career_id', $career->id)->where('type', 'reingreso')->exists()) {
+                \App\Models\Enrollment::create([
+                    'user_id' => $admin->id,
+                    'career_id' => $career->id,
+                    'type' => 'reingreso',
+                    'status' => 'pending',
+                ]);
+            }
         }
     }
 }
