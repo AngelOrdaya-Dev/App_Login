@@ -60,7 +60,7 @@ services:
       - key: MAIL_FROM_NAME
         value: "Premier Academy"
       - key: APP_OWNER_EMAIL
-        value: xdangel755@gmail.com
+        value: angel1120171@hotmail.com
 
 
 databases:

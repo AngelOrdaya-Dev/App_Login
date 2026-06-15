@@ -464,7 +464,7 @@
                             </div>
                             <h4 style="font-family: var(--font-display);">Aperturar Proceso</h4>
                             <p style="color: var(--text-muted); font-size: 0.85rem; max-width: 250px;">Inicia un nuevo proceso de admisión o matrícula regular.</p>
-                            <button class="btn-premium-logout" style="width: auto; padding: 10px 30px; margin-top: 1rem;" onclick="openModal('enrollmentModal')">
+                            <button type="button" class="btn-premium-logout" style="width: auto; padding: 10px 30px; margin-top: 1rem;" onclick="openModal('enrollmentModal')">
                                 <i class="fas fa-play"></i> Iniciar Trámite
                             </button>
                         </div>

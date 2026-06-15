@@ -671,6 +671,7 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 1.5rem;
+            align-items: start;
         }
 
         .panel {
@@ -1402,13 +1403,33 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            /* Theme Toggle Logic - Forced Dark Mode for Stability */
+            /* Theme Toggle Logic */
             const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) themeToggle.style.display = 'none'; // Ocultar por ahora para evitar clics accidentales
+            const themeIcon = document.getElementById('theme-icon');
             
-            // Garantizar que siempre inicie en modo oscuro
-            document.body.classList.remove('light-mode');
-            localStorage.setItem('theme-mode', 'dark');
+            // Check local storage
+            if (localStorage.getItem('theme-mode') === 'light') {
+                document.body.classList.add('light-mode');
+                if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
+            } else {
+                document.body.classList.remove('light-mode');
+                if(themeIcon) { themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); }
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-mode');
+                    const isLight = document.body.classList.contains('light-mode');
+                    localStorage.setItem('theme-mode', isLight ? 'light' : 'dark');
+                    
+                    if(themeIcon) {
+                        themeIcon.classList.remove(isLight ? 'fa-moon' : 'fa-sun');
+                        themeIcon.classList.add(isLight ? 'fa-sun' : 'fa-moon');
+                    }
+                    
+                    window.dispatchEvent(new Event('themeChanged'));
+                });
+            }
 
             // Auto-scroll sidebar to active item
             const activeItem = document.querySelector('.menu-item.active');

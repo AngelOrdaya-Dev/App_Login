@@ -8,7 +8,7 @@
             <a href="{{ route('export.classrooms') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
                 <i class="fas fa-file-csv"></i> Exportar
             </a>
-            <button onclick="openModal('classroomModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
+            <button type="button" onclick="openModal('classroomModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
                 <i class="fas fa-plus"></i> Agregar Aula
             </button>
         </div>

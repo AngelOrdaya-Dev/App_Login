@@ -4,7 +4,7 @@
 <div class="panel">
     <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <h3 class="panel-title"><i class="fas fa-book-open"></i> Carreras Disponibles</h3>
-        <button onclick="openModal('careerModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
+        <button type="button" onclick="openModal('careerModal')" class="btn-premium-logout" style="width: auto; padding: 8px 20px; font-size: 0.85rem;">
             <i class="fas fa-plus"></i> Agregar Carrera
         </button>
     </div>

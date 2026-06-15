@@ -13,7 +13,7 @@
             </p>
         </div>
         @if(Auth::user()->isAdmin())
-        <button onclick="openModal('scheduleModal')" class="btn-premium-logout" style="width:auto; padding:8px 20px; font-size:0.85rem;">
+        <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout" style="width:auto; padding:8px 20px; font-size:0.85rem;">
             <i class="fas fa-plus"></i> Nuevo Horario
         </button>
         @endif

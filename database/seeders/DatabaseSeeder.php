@@ -19,6 +19,10 @@ class DatabaseSeeder extends Seeder
             CareerSeeder::class,
             AcademicDataSeeder::class,
             AdminUserSeeder::class,
+            TeacherSeeder::class,
+            ClassroomSeeder::class,
+            ScheduleSeeder::class,
+            AuditLogSeeder::class,
             AcademicGradesSeeder::class,
         ]);
     }

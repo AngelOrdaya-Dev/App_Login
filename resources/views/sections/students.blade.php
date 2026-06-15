@@ -12,7 +12,7 @@
             <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 100px;">
                 <i class="fas fa-file-csv"></i> Exportar
             </a>
-            <button onclick="openModal('studentModal')" class="btn-premium-logout" style="padding: 8px 15px; font-size: 0.8rem;">
+            <button type="button" onclick="openModal('studentModal')" class="btn-premium-logout" style="padding: 8px 15px; font-size: 0.8rem;">
                 <i class="fas fa-user-plus"></i> Registrar
             </button>
         </div>

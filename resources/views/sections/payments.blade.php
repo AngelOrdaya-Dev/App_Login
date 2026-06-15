@@ -43,7 +43,7 @@
                     <p style="color: #2ecc71; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;"><i class="fas fa-check-circle"></i> Estás al día con tus pagos</p>
                 @else
                     <p style="color: #f1c40f; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem;"><i class="fas fa-exclamation-triangle"></i> Tienes pagos pendientes</p>
-                    <button class="btn-premium-logout" style="background: var(--accent-red); margin-bottom: 1rem; width: 100%;" onclick="openModal('paymentSelectionModal')">
+                    <button type="button" class="btn-premium-logout" style="background: var(--accent-red); margin-bottom: 1rem; width: 100%;" onclick="openModal('paymentSelectionModal')">
                         <i class="fas fa-credit-card"></i> PAGAR AHORA
                     </button>
                 @endif
@@ -82,7 +82,7 @@
                                     <h4 style="margin-bottom: 10px;">Yape / Plin</h4>
                                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">Escanea el QR y sube tu comprobante para validación manual.</p>
                                 </div>
-                                <button onclick="closeModal('paymentSelectionModal'); openModal('qrModal')" class="btn-premium-logout" style="background: #00d1b2; width: 100%; font-size: 0.85rem;">VER QR DE PAGO</button>
+                                <button type="button" onclick="closeModal('paymentSelectionModal'); openModal('qrModal')" class="btn-premium-logout" style="background: #00d1b2; width: 100%; font-size: 0.85rem;">VER QR DE PAGO</button>
                             </div>
                         </div>
                     </div>

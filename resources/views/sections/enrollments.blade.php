@@ -27,7 +27,7 @@
             </div>
             <h4 style="font-size: 1.2rem; font-family: var(--font-display);">Aperturar Proceso</h4>
             <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 80%;">Inicia un nuevo proceso de admisión o matrícula regular para estudiantes nuevos.</p>
-            <button class="btn-premium-logout" id="btnStartProcess" style="width: auto; padding: 0.8rem 2.5rem; margin-top: 1rem;" onclick="openModal('enrollmentModal')">
+            <button type="button" class="btn-premium-logout" id="btnStartProcess" style="width: auto; padding: 0.8rem 2.5rem; margin-top: 1rem;" onclick="openModal('enrollmentModal')">
                 <i class="fas fa-play"></i> Iniciar Trámite
             </button>
         </div>
@@ -37,7 +37,7 @@
     @if(Auth::user()->isAdmin())
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <h3 style="font-family: var(--font-display); font-size: 1.3rem;"><i class="fas fa-list-ul" style="color: var(--accent-red);"></i> Todas las Solicitudes</h3>
-        <button class="btn-premium-logout" style="width: auto; padding: 10px 20px; font-size: 0.8rem;" onclick="openModal('enrollmentModal')">
+        <button type="button" class="btn-premium-logout" style="width: auto; padding: 10px 20px; font-size: 0.8rem;" onclick="openModal('enrollmentModal')">
             <i class="fas fa-plus"></i> Inscripción Manual
         </button>
     </div>

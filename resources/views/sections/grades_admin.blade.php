@@ -4,7 +4,7 @@
 <div class="panel">
     <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
         <h3 class="panel-title"><i class="fas fa-edit"></i> Gestión de Calificaciones</h3>
-        <button class="btn-premium-logout" style="width: auto; padding: 8px 20px;" onclick="openModal('addGradeModal')">
+        <button type="button" class="btn-premium-logout" style="width: auto; padding: 8px 20px;" onclick="openModal('addGradeModal')">
             <i class="fas fa-plus"></i> Ingresar Nota
         </button>
     </div>

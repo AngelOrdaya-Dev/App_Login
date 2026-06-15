@@ -5,7 +5,7 @@
     <div class="panel-header">
         <h3 class="panel-title"><i class="fas fa-chalkboard-teacher"></i> Gestión de Docentes</h3>
         <div class="panel-header-actions">
-            <button onclick="openModal('teacherModal')" class="btn-premium-logout">
+            <button type="button" onclick="openModal('teacherModal')" class="btn-premium-logout">
                 <i class="fas fa-user-plus"></i> Registrar Docente
             </button>
         </div>
