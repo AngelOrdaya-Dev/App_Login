@@ -58,9 +58,6 @@ class LoginController extends Controller
             $driver->stateless();
         }
 
-        if ($provider === 'facebook') {
-            return $driver->with(['auth_type' => 'reauthenticate'])->redirect();
-        }
         return $driver->redirect();
     }
 
@@ -107,6 +104,12 @@ class LoginController extends Controller
             
         } catch (\Exception $e) {
             \Log::error("Social Auth Error ($provider): " . $e->getMessage());
+
+            // Si el código ya fue utilizado, pero ya estamos autenticados en el backend por la petición paralela
+            if (Auth::check()) {
+                return redirect()->route('dashboard');
+            }
+
             $errorMessage = $e->getMessage() ?: 'No se pudo obtener información del proveedor. Intenta nuevamente.';
             return redirect('/login')->with('error', "Error al autenticarse con " . ucfirst($provider) . ": " . $errorMessage);
         }
