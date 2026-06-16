@@ -309,7 +309,7 @@ class SectionController extends Controller
             'type' => 'info',
         ]);
 
-        return redirect()->route('dashboard')->with('success', 'Solicitud enviada exitosamente. Se ha generado un cargo en tu estado de cuenta.');
+        return redirect()->route('enrollments')->with('success', 'Solicitud enviada exitosamente. Se ha generado un cargo en tu estado de cuenta.');
     }
 
     public function payments()

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ScheduleSeeder::class,
             AuditLogSeeder::class,
             AcademicGradesSeeder::class,
+            StudentGradeSeeder::class,
         ]);
     }
 }

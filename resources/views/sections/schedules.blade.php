@@ -65,7 +65,7 @@
                     <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
                         <i class="fas fa-door-open"></i> {{ $slot->classroom->name }}
                         @if($slot->course->teacher)
-                        · <i class="fas fa-user-tie"></i> {{ explode(' ', $slot->course->teacher->name)[0] }}
+                        · <i class="fas fa-user-tie"></i> <strong>{{ $slot->course->teacher->name }}</strong>
                         @endif
                     </div>
 

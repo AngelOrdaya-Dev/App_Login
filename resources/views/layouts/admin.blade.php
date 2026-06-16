@@ -1305,9 +1305,7 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 
-                <button class="action-btn" id="theme-toggle" title="Cambiar Modo" style="margin-right: 1rem; border: none; background: transparent; cursor: pointer;">
-                    <i class="fas fa-moon" id="theme-icon"></i>
-                </button>
+
 
                 @if(Auth::user()->isAdmin())
                 <div class="search-bar" style="position: relative;">
@@ -1403,32 +1401,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
-            /* Theme Toggle Logic */
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            
-            // Check local storage
-            if (localStorage.getItem('theme-mode') === 'light') {
-                document.body.classList.add('light-mode');
-                if(themeIcon) { themeIcon.classList.remove('fa-moon'); themeIcon.classList.add('fa-sun'); }
-            } else {
-                document.body.classList.remove('light-mode');
-                if(themeIcon) { themeIcon.classList.remove('fa-sun'); themeIcon.classList.add('fa-moon'); }
-            }
+            /* Theme: Always Dark Mode */
+            document.body.classList.remove('light-mode');
 
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    document.body.classList.toggle('light-mode');
-                    const isLight = document.body.classList.contains('light-mode');
-                    localStorage.setItem('theme-mode', isLight ? 'light' : 'dark');
-                    
-                    if(themeIcon) {
-                        themeIcon.classList.remove(isLight ? 'fa-moon' : 'fa-sun');
-                        themeIcon.classList.add(isLight ? 'fa-sun' : 'fa-moon');
-                    }
-                    
-                    window.dispatchEvent(new Event('themeChanged'));
-                });
+            /* Accent Color Persistence — load saved color on every page */
+            const savedAccent = localStorage.getItem('app_theme_color');
+            if (savedAccent) {
+                document.documentElement.style.setProperty('--accent-red', savedAccent);
+                const hex = savedAccent.replace('#','');
+                const r = parseInt(hex.substring(0,2),16);
+                const g = parseInt(hex.substring(2,4),16);
+                const b = parseInt(hex.substring(4,6),16);
+                document.documentElement.style.setProperty('--accent-red-faded', `rgba(${r},${g},${b},0.15)`);
+                document.documentElement.style.setProperty('--accent-red-glow',  `rgba(${r},${g},${b},0.4)`);
+                document.documentElement.style.setProperty('--border-red', `rgba(${r},${g},${b},0.3)`);
             }
 
             // Auto-scroll sidebar to active item
