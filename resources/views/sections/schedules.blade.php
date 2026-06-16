@@ -62,10 +62,14 @@
                         {{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}
                     </div>
                     <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);">{{ $slot->course->name }}</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">
-                        <i class="fas fa-door-open"></i> {{ $slot->classroom->name }}
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px; display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
+                        <span style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                            <i class="fas fa-door-open"></i> {{ $slot->classroom->name }}
+                        </span>
                         @if($slot->course->teacher)
-                        · <i class="fas fa-user-tie"></i> <strong>{{ $slot->course->teacher->name }}</strong>
+                        <span style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap; color:var(--text-main);">
+                            · <i class="fas fa-user-tie" style="color:var(--accent-red);"></i> <strong>{{ $slot->course->teacher->name }}</strong>
+                        </span>
                         @endif
                     </div>
 
