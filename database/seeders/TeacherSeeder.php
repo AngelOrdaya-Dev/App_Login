@@ -11,23 +11,41 @@ class TeacherSeeder extends Seeder
     public function run(): void
     {
         $teachers = [
-            ['name' => 'Giancarlos Barboza', 'email' => 'giancarlos.barboza@premier.edu'],
-            ['name' => 'Elena Vásquez', 'email' => 'elena.vasquez@premier.edu'],
-            ['name' => 'Roberto Sánchez', 'email' => 'roberto.sanchez@premier.edu'],
-            ['name' => 'María Fernández', 'email' => 'maria.fernandez@premier.edu'],
-            ['name' => 'Carlos Mendoza', 'email' => 'carlos.mendoza@premier.edu'],
+            [
+                'name'     => 'Giancarlos Barboza',
+                'email'    => 'giancarlos.barboza@premier.edu',
+                'password' => 'Barboza2024#',
+            ],
+            [
+                'name'     => 'Elena Vásquez',
+                'email'    => 'elena.vasquez@premier.edu',
+                'password' => 'Vasquez2024#',
+            ],
+            [
+                'name'     => 'Roberto Sánchez',
+                'email'    => 'roberto.sanchez@premier.edu',
+                'password' => 'Sanchez2024#',
+            ],
+            [
+                'name'     => 'María Fernández',
+                'email'    => 'maria.fernandez@premier.edu',
+                'password' => 'Fernandez2024#',
+            ],
         ];
 
         foreach ($teachers as $teacher) {
-            User::firstOrCreate(
+            User::updateOrCreate(
                 ['email' => $teacher['email']],
                 [
-                    'name' => $teacher['name'],
-                    'password' => Hash::make('docente123'),
-                    'role' => 'teacher',
+                    'name'           => $teacher['name'],
+                    'password'       => Hash::make($teacher['password']),
+                    'role'           => 'teacher',
                     'terms_accepted' => true,
                 ]
             );
         }
+
+        // Eliminar el 5to docente si existía (Carlos Mendoza no fue pedido)
+        User::where('email', 'carlos.mendoza@premier.edu')->delete();
     }
 }

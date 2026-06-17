@@ -56,9 +56,6 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
         Route::post('/horarios', [ScheduleController::class, 'store'])->name('schedules.store');
         Route::delete('/horarios/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
-        // Notas Administrativas
-        Route::post('/notas/{grade}', [SectionController::class, 'updateGrade'])->name('grades.update');
-        Route::delete('/notas/{grade}', [SectionController::class, 'destroyGrade'])->name('grades.destroy');
 
         // Auditoría y Reportes
         Route::get('/auditoria', [SectionController::class, 'auditLogs'])->name('audit.logs');
@@ -86,6 +83,9 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     
     Route::get('/notas', [SectionController::class, 'grades'])->name('grades');
     Route::post('/notas', [SectionController::class, 'storeGrade'])->name('grades.store');
+    // Notas: editar y eliminar (docente solo puede en sus cursos, admin en todos)
+    Route::post('/notas/{grade}', [SectionController::class, 'updateGrade'])->name('grades.update');
+    Route::delete('/notas/{grade}', [SectionController::class, 'destroyGrade'])->name('grades.destroy');
 
     Route::get('/configuracion', [SectionController::class, 'settings'])->name('settings');
     

@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#ff0000">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/Logo.jpeg">
     <link rel="icon" type="image/jpeg" href="/Logo.jpeg">
     <link rel="shortcut icon" href="/Logo.jpeg" type="image/x-icon">
     <style>

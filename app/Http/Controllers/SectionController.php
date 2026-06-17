@@ -375,8 +375,17 @@ class SectionController extends Controller
     {
         $user = Auth::user();
         if ($user->isAdmin()) {
-            $grades = Grade::with(['user', 'course'])->latest()->get();
-            $courses = Course::all();
+            $grades   = Grade::with(['user', 'course'])->latest()->get();
+            $courses  = Course::with('career')->get();
+            $students = User::where('role', 'student')->get();
+            return view('sections.grades_admin', compact('grades', 'courses', 'students'));
+        } elseif ($user->isTeacher()) {
+            // El docente ve las notas de sus propios cursos
+            $teacherCourseIds = Course::where('teacher_id', $user->id)->pluck('id');
+            $grades   = Grade::with(['user', 'course'])
+                            ->whereIn('course_id', $teacherCourseIds)
+                            ->latest()->get();
+            $courses  = Course::with('career')->where('teacher_id', $user->id)->get();
             $students = User::where('role', 'student')->get();
             return view('sections.grades_admin', compact('grades', 'courses', 'students'));
         } else {
@@ -388,28 +397,36 @@ class SectionController extends Controller
 
     public function storeGrade(Request $request)
     {
-        if (!Auth::user()->isAdmin()) abort(403);
+        $user = Auth::user();
+        if (!$user->isAdmin() && !$user->isTeacher()) abort(403);
 
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id'   => 'required|exists:users,id',
             'course_id' => 'required|exists:courses,id',
-            'grade' => 'required|numeric|min:0|max:20',
+            'grade'     => 'required|numeric|min:0|max:20',
         ]);
 
-        $course = Course::find($request->course_id);
+        // Si es docente, verificar que el curso le pertenece
+        if ($user->isTeacher()) {
+            $course = Course::where('id', $request->course_id)
+                           ->where('teacher_id', $user->id)
+                           ->firstOrFail();
+        } else {
+            $course = Course::find($request->course_id);
+        }
         
         Grade::create([
-            'user_id' => $request->user_id,
+            'user_id'   => $request->user_id,
             'course_id' => $request->course_id,
-            'grade' => $request->grade,
-            'status' => $request->grade >= 11 ? 'pass' : 'fail',
+            'grade'     => $request->grade,
+            'status'    => $request->grade >= 11 ? 'pass' : 'fail',
         ]);
 
         Notification::create([
             'user_id' => $request->user_id,
-            'title' => 'Nueva Calificación',
+            'title'   => 'Nueva Calificación',
             'message' => "Se ha publicado una nueva nota en el curso de " . $course->name,
-            'type' => 'info',
+            'type'    => 'info',
         ]);
 
         return redirect()->route('grades')->with('success', 'Calificación registrada correctamente.');
@@ -417,22 +434,30 @@ class SectionController extends Controller
 
     public function updateGrade(Request $request, Grade $grade)
     {
-        if (!Auth::user()->isAdmin()) abort(403);
+        $user = Auth::user();
+        if (!$user->isAdmin() && !$user->isTeacher()) abort(403);
+
+        // Si es docente, verificar que el curso le pertenece
+        if ($user->isTeacher()) {
+            Course::where('id', $grade->course_id)
+                  ->where('teacher_id', $user->id)
+                  ->firstOrFail();
+        }
 
         $request->validate([
             'grade' => 'required|numeric|min:0|max:20',
         ]);
 
         $grade->update([
-            'grade' => $request->grade,
+            'grade'  => $request->grade,
             'status' => $request->grade >= 11 ? 'pass' : 'fail',
         ]);
 
         Notification::create([
             'user_id' => $grade->user_id,
-            'title' => 'Nota Actualizada',
+            'title'   => 'Nota Actualizada',
             'message' => "Se ha actualizado tu nota en el curso de " . $grade->course->name,
-            'type' => 'warning',
+            'type'    => 'warning',
         ]);
 
         return redirect()->route('grades')->with('success', 'Calificación actualizada correctamente.');
@@ -440,7 +465,16 @@ class SectionController extends Controller
 
     public function destroyGrade(Grade $grade)
     {
-        if (!Auth::user()->isAdmin()) abort(403);
+        $user = Auth::user();
+        if (!$user->isAdmin() && !$user->isTeacher()) abort(403);
+
+        // Si es docente, verificar que el curso le pertenece
+        if ($user->isTeacher()) {
+            Course::where('id', $grade->course_id)
+                  ->where('teacher_id', $user->id)
+                  ->firstOrFail();
+        }
+
         $grade->delete();
         return redirect()->route('grades')->with('success', 'Calificación eliminada correctamente.');
     }
