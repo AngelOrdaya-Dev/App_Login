@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="panel">
-    <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1.5rem;">
+    <div class="panel-header schedule-topbar">
         <div>
             <h3 class="panel-title"><i class="fas fa-calendar-alt"></i> Horario Semanal</h3>
             <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">
@@ -12,18 +12,18 @@
                 @endif
             </p>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <div id="view-switcher" style="display: flex; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 12px; padding: 5px; gap: 5px;">
-                <button class="view-btn active" data-view="timeGridWeek" id="btn-week" onclick="switchView('timeGridWeek', this)">
-                    <i class="fas fa-table"></i> Semana
+        <div class="schedule-topbar-actions">
+            <div id="view-switcher" class="view-switcher-wrap">
+                <button class="view-btn" id="btn-week" onclick="switchView('timeGridWeek', this)">
+                    <i class="fas fa-table"></i> <span>Semana</span>
                 </button>
-                <button class="view-btn" data-view="listWeek" id="btn-list" onclick="switchView('listWeek', this)">
-                    <i class="fas fa-list"></i> Lista
+                <button class="view-btn" id="btn-list" onclick="switchView('listWeek', this)">
+                    <i class="fas fa-list"></i> <span>Lista</span>
                 </button>
             </div>
             @if(Auth::user()->isAdmin())
-            <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout" style="width:auto; padding:8px 20px; font-size:0.85rem;">
-                <i class="fas fa-plus"></i> Nuevo Horario
+            <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout schedule-new-btn">
+                <i class="fas fa-plus"></i> <span class="btn-text-full">Nuevo Horario</span><span class="btn-text-short">Nuevo</span>
             </button>
             @endif
         </div>
@@ -140,12 +140,35 @@
 @endif
 
 <style>
+    /* ---- Topbar ---- */
+    .schedule-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .schedule-topbar-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .view-switcher-wrap {
+        display: flex;
+        background: var(--bg-card);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+    }
     .view-btn {
         background: transparent;
         border: none;
         color: var(--text-muted);
         font-size: 0.8rem;
-        padding: 6px 14px;
+        padding: 6px 12px;
         border-radius: 8px;
         cursor: pointer;
         font-weight: 600;
@@ -153,18 +176,17 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        white-space: nowrap;
     }
     .view-btn.active {
         background: var(--accent-red);
         color: #fff;
         box-shadow: 0 3px 10px rgba(255,0,0,0.3);
     }
-    .view-btn:hover:not(.active) {
-        color: var(--text-main);
-        background: rgba(255,255,255,0.05);
-    }
+    .view-btn:hover:not(.active) { color: var(--text-main); background: rgba(255,255,255,0.05); }
+    .btn-text-short { display: none; }
 
-    /* FullCalendar Dark Override */
+    /* ---- FullCalendar Dark Override ---- */
     #calendar {
         --fc-border-color: var(--border-light);
         --fc-page-bg-color: transparent;
@@ -174,23 +196,24 @@
         --fc-now-indicator-color: var(--accent-red);
         --fc-event-border-color: transparent;
     }
-    .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-main); }
-    .fc .fc-button { background: rgba(255,255,255,0.05) !important; border: 1px solid var(--border-light) !important; color: var(--text-main) !important; font-size: 0.8rem !important; }
+    .fc .fc-toolbar { flex-wrap: wrap; gap: 8px; }
+    .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1rem; color: var(--text-main); }
+    .fc .fc-button { background: rgba(255,255,255,0.05) !important; border: 1px solid var(--border-light) !important; color: var(--text-main) !important; font-size: 0.78rem !important; padding: 5px 10px !important; }
     .fc .fc-button:hover { background: rgba(255,255,255,0.1) !important; }
     .fc .fc-button-primary:not(:disabled).fc-button-active { background: var(--accent-red) !important; border-color: var(--accent-red) !important; }
-    .fc .fc-col-header-cell-cushion { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; text-decoration: none; }
-    .fc .fc-timegrid-slot-label-cushion { color: var(--text-muted); font-size: 0.75rem; }
-    .fc .fc-daygrid-day-number { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; }
-    .fc .fc-event { border-radius: 8px !important; border: none !important; padding: 3px 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
-    .fc .fc-event:hover { filter: brightness(1.2); }
+    .fc .fc-col-header-cell-cushion { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; text-decoration: none; }
+    .fc .fc-timegrid-slot-label-cushion { color: var(--text-muted); font-size: 0.7rem; }
+    .fc .fc-event { border-radius: 6px !important; border: none !important; padding: 2px 5px; font-size: 0.72rem; font-weight: 700; cursor: pointer; line-height: 1.3; }
+    .fc .fc-event:hover { filter: brightness(1.15); }
     .fc .fc-list-event { background: transparent; }
     .fc .fc-list-event-title a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
     .fc .fc-list-event-time { color: var(--text-muted); font-size: 0.8rem; }
-    .fc .fc-list-day-cushion { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.75rem; }
-    .fc .fc-scrollgrid-section-header { border-bottom: 1px solid var(--border-light) !important; }
+    .fc .fc-list-day-cushion { background: rgba(255,255,255,0.03); color: var(--accent-red); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .fc .fc-list-empty { background: transparent; color: var(--text-muted); padding: 3rem; text-align: center; }
     .fc .fc-scrollgrid-section > * { border-color: var(--border-light) !important; }
     .fc td, .fc th { border-color: var(--border-light) !important; }
 
+    /* ---- Event Detail Modal ---- */
     .event-detail-row {
         display: flex;
         align-items: center;
@@ -202,6 +225,20 @@
     }
     .event-detail-row i { color: var(--accent-red); width: 18px; text-align: center; }
     .event-detail-row span { font-size: 0.9rem; color: var(--text-main); }
+
+    /* ---- MÓVIL ---- */
+    @media (max-width: 640px) {
+        .schedule-topbar { margin-bottom: 1rem; }
+        .view-btn span { display: none; } /* Sólo icono en móvil */
+        .view-btn { padding: 6px 10px; }
+        .btn-text-full { display: none; }
+        .btn-text-short { display: inline; }
+        .schedule-new-btn { padding: 8px 14px !important; font-size: 0.8rem !important; }
+        .fc .fc-toolbar-title { font-size: 0.9rem; }
+        .fc .fc-button { font-size: 0.72rem !important; padding: 4px 8px !important; }
+        .fc .fc-list-event-title a { font-size: 0.85rem; }
+        .fc .fc-list-event-time { font-size: 0.75rem; }
+    }
 </style>
 
 <!-- FullCalendar CDN -->
@@ -222,9 +259,18 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        const isMobile = window.innerWidth < 640;
         const calendarEl = document.getElementById('calendar');
+
+        // En móvil: activar botón de lista por defecto
+        if (isMobile) {
+            document.getElementById('btn-list').classList.add('active');
+        } else {
+            document.getElementById('btn-week').classList.add('active');
+        }
+
         calendarInstance = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'timeGridWeek',
+            initialView: isMobile ? 'listWeek' : 'timeGridWeek',
             locale: 'es',
             headerToolbar: {
                 left: 'prev,next today',
