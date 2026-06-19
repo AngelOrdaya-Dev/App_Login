@@ -155,7 +155,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($payments as $payment)
+                        @forelse($payments as $payment)
                             <tr style="border-bottom: 1px solid var(--border-light); transition: all 0.2s;">
                                 <td style="padding: 1.2rem;"><strong>{{ $payment->user->name }}</strong></td>
                                 <td style="padding: 1.2rem; color: var(--text-muted);">{{ $payment->description }}</td>
@@ -178,7 +178,14 @@
                                     @endif
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" style="padding: 3rem; text-align: center; color: var(--text-muted);">
+                                    <i class="fas fa-file-invoice" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; display: block;"></i>
+                                    <p style="font-size: 1rem; margin: 0;">No hay pagos registrados en el sistema por el momento.</p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

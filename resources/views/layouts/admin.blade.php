@@ -20,6 +20,7 @@
     <link rel="shortcut icon" href="/Logo.jpeg" type="image/x-icon">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Meta referrer for Google Avatar images -->
     <meta name="referrer" content="no-referrer">
     
@@ -1670,6 +1671,103 @@
                     this.classList.add('active');
                 });
             });
+
+            // POLLING FOR NOTIFICATIONS
+            setInterval(() => {
+                fetch('{{ route("notifications.unread") }}')
+                    .then(response => response.json())
+                    .then(data => {
+                        const badge = document.getElementById('notifBadge');
+                        const countText = document.getElementById('notifCountText');
+                        const notifBtn = document.getElementById('notifBtn');
+                        
+                        let currentCount = badge ? parseInt(badge.textContent) : 0;
+                        
+                        if (data.unread_count > currentCount) {
+                            // New notifications arrived!
+                            if (!badge) {
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'badge';
+                                newBadge.id = 'notifBadge';
+                                newBadge.style.cssText = 'background: var(--accent-red); position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface);';
+                                newBadge.textContent = data.unread_count;
+                                notifBtn.appendChild(newBadge);
+                            } else {
+                                badge.textContent = data.unread_count;
+                            }
+                            
+                            if (countText) {
+                                countText.textContent = `${data.unread_count} Nuevas`;
+                            }
+                            
+                            // Render new items in dropdown
+                            const notifList = document.getElementById('notificationsList');
+                            clearElement(notifList);
+                            
+                            data.notifications.forEach(notif => {
+                                const item = document.createElement('div');
+                                item.className = 'dropdown-item notif-item';
+                                item.id = 'notif-' + notif.id;
+                                item.style.cssText = 'position: relative; padding-right: 2.5rem;';
+                                
+                                let iconHtml = '<i class="fas fa-info-circle"></i>';
+                                if(notif.type == 'success') iconHtml = '<i class="fas fa-check-circle" style="color: #2ecc71;"></i>';
+                                if(notif.type == 'warning') iconHtml = '<i class="fas fa-exclamation-triangle" style="color: #f39c12;"></i>';
+                                
+                                let systemBadge = !notif.user_id ? '<span style="font-size: 0.55rem; background: var(--accent-red); color: #fff; padding: 1px 5px; border-radius: 4px; margin-left: 5px; font-weight: 800; vertical-align: middle;">SISTEMA</span>' : '';
+                                
+                                item.innerHTML = `
+                                    <div class="dropdown-item-icon">
+                                        ${iconHtml}
+                                    </div>
+                                    <div class="dropdown-item-content">
+                                        <div class="dropdown-item-title">
+                                            ${notif.title} ${systemBadge}
+                                        </div>
+                                        <div class="dropdown-item-text">${notif.message}</div>
+                                    </div>
+                                    <button type="button" class="dismiss-notif" data-id="${notif.id}" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; transition: color 0.2s;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                `;
+                                
+                                notifList.appendChild(item);
+                                
+                                // Re-attach dismiss events
+                                item.querySelector('.dismiss-notif').addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const id = this.getAttribute('data-id');
+                                    fetch('/notificaciones/'+id+'/leer', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                            'Accept': 'application/json'
+                                        }
+                                    }).then(() => item.remove());
+                                });
+                            });
+                            
+                            // Show toast using SweetAlert2 if available
+                            if (window.Swal) {
+                                const newNotif = data.notifications[0]; // Most recent
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: newNotif.type === 'error' ? 'error' : (newNotif.type === 'success' ? 'success' : 'info'),
+                                    title: newNotif.title,
+                                    text: newNotif.message,
+                                    showConfirmButton: false,
+                                    timer: 5000,
+                                    timerProgressBar: true,
+                                    background: 'var(--bg-surface)',
+                                    color: 'var(--text-main)',
+                                    iconColor: 'var(--accent-red)'
+                                });
+                            }
+                        }
+                    })
+                    .catch(err => console.log('Polling notifications error:', err));
+            }, 15000); // 15 seconds
         });
 
         // ===== MOBILE SIDEBAR TOGGLE =====

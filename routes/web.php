@@ -97,6 +97,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::post('/perfil/actualizar-carrera', [ProfileController::class, 'updateCareer'])->name('profile.update.career');
     
     // Notifications & Search
+    Route::get('/notificaciones/unread', [NotificationController::class, 'unread'])->name('notifications.unread');
     Route::post('/notificaciones/{id}/leer', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notificaciones/configuracion', [NotificationController::class, 'toggleSettings'])->name('notifications.settings');
     Route::get('/buscar', [SearchController::class, 'globalSearch'])->name('search.global');
@@ -108,6 +109,10 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
     // Clases Virtuales
     Route::get('/clases-virtuales', [SectionController::class, 'virtualClasses'])->name('virtual.classes');
+
+    // Foro de Dudas
+    Route::get('/cursos/{course}/foro', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+    Route::post('/cursos/{course}/foro', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
 
     // Autenticación de Dos Factores
     Route::get('/verificar-2fa', [App\Http\Controllers\Auth\TwoFactorController::class, 'index'])->name('verify.index');

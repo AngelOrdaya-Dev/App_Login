@@ -104,20 +104,27 @@
         }
 
         .btn-login {
-            background: white;
-            color: black;
-            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--accent-red) 0%, #cc0000 100%);
+            color: white;
+            padding: 10px 28px;
             border-radius: 50px;
-            font-weight: 700;
+            font-weight: 800;
             text-decoration: none;
             transition: var(--transition);
-            border: 2px solid white;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(255, 62, 62, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
         }
 
         .btn-login:hover {
-            background: transparent;
+            background: linear-gradient(135deg, #cc0000 0%, #8b0000 100%);
             color: white;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 62, 62, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Hero Section */

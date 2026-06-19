@@ -37,13 +37,40 @@ class ScheduleController extends Controller
             $classrooms = collect();
         }
 
-        // Agrupar por día
+        // Agrupar por día (para la vista clásica o listado)
         $grid = [];
         for ($day = 1; $day <= 6; $day++) {
             $grid[$day] = $schedules->where('day_of_week', $day)->sortBy('start_time')->values();
         }
 
-        return view('sections.schedules', compact('grid', 'courses', 'classrooms'));
+        // Preparar eventos para FullCalendar
+        $calendarEvents = [];
+        $dayMapping = [
+            1 => 1, // Lunes
+            2 => 2, // Martes
+            3 => 3, // Miércoles
+            4 => 4, // Jueves
+            5 => 5, // Viernes
+            6 => 6, // Sábado
+        ];
+
+        foreach ($schedules as $schedule) {
+            $calendarEvents[] = [
+                'title' => $schedule->course->name . ' - ' . $schedule->classroom->name,
+                'startTime' => $schedule->start_time,
+                'endTime' => $schedule->end_time,
+                'daysOfWeek' => [$dayMapping[$schedule->day_of_week]],
+                'color' => 'var(--accent-red)',
+                'extendedProps' => [
+                    'course_id' => $schedule->course_id,
+                    'classroom' => $schedule->classroom->name,
+                    'teacher' => $schedule->course->teacher ? $schedule->course->teacher->name : 'N/A',
+                    'schedule_id' => $schedule->id
+                ]
+            ];
+        }
+
+        return view('sections.schedules', compact('grid', 'courses', 'classrooms', 'calendarEvents'));
     }
 
     /**

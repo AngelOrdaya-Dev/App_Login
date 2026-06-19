@@ -67,7 +67,7 @@
 </div>
 
 <!-- Upload Modal -->
-<div id="uploadModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
+<div id="uploadModal" style="display: {{ $errors->any() ? 'flex' : 'none' }}; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem;">
     <div style="background: var(--bg-surface); border: 1px solid var(--border-light); width: 100%; max-width: 500px; border-radius: 24px; padding: 2rem; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <h3 style="color: var(--text-main); margin: 0;"><i class="fas fa-file-upload" style="color: var(--accent-red);"></i> Subir Nuevo Material</h3>
@@ -76,16 +76,27 @@
 
         <form action="{{ route('library.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+
+            @if($errors->any())
+                <div style="background: rgba(231, 76, 60, 0.1); color: #e74c3c; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid rgba(231, 76, 60, 0.3); font-size: 0.85rem;">
+                    <ul style="margin: 0; padding-left: 1.5rem;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Título del Documento</label>
-                    <input type="text" name="title" required placeholder="Ej: Sílabo del curso, Guía de práctica..." style="background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
+                    <input type="text" name="title" required placeholder="Ej: Sílabo del curso, Guía de práctica..." style="width: 100%; box-sizing: border-box; background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Tipo</label>
-                        <select name="type" required style="background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
+                        <select name="type" required style="width: 100%; box-sizing: border-box; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
                             <option value="Sílaba">Sílaba</option>
                             <option value="Guía">Guía de Estudio</option>
                             <option value="Material">Material de Clase</option>
@@ -94,7 +105,7 @@
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Curso</label>
-                        <select name="course_id" required style="background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
+                        <select name="course_id" required style="width: 100%; box-sizing: border-box; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: 12px; outline: none;">
                             @foreach($courses as $course)
                                 <option value="{{ $course->id }}">{{ $course->name }}</option>
                             @endforeach
@@ -104,7 +115,7 @@
 
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Archivo (PDF, Word, PPT)</label>
-                    <input type="file" name="file" required style="background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 12px; font-size: 0.85rem;">
+                    <input type="file" name="file" required style="width: 100%; box-sizing: border-box; background: var(--bg-base); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 12px; font-size: 0.85rem;">
                     <span style="font-size: 0.7rem; color: var(--text-muted);">Máximo 10MB</span>
                 </div>
 

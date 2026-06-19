@@ -13,11 +13,16 @@
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 @foreach($courses as $course)
-                <div class="course-room-card" onclick="startClass('{{ str_replace(' ', '-', $course->name) }}-{{ $course->id }}', '{{ $course->name }}')" style="padding: 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; cursor: pointer; transition: 0.2s;">
-                    <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem; margin-bottom: 5px;">{{ $course->name }}</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">
-                        <span class="status-indicator" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; margin-right: 5px;"></span> Disponible ahora
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="course-room-card" onclick="startClass('{{ str_replace(' ', '-', $course->name) }}-{{ $course->id }}', '{{ $course->name }}')" style="flex: 1; padding: 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; cursor: pointer; transition: 0.2s;">
+                        <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem; margin-bottom: 5px;">{{ $course->name }}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">
+                            <span class="status-indicator" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; margin-right: 5px;"></span> Disponible ahora
+                        </div>
                     </div>
+                    <a href="{{ route('forum.show', $course->id) }}" class="btn-premium-logout" style="padding: 10px; border-radius: 12px; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Foro de Dudas">
+                        <i class="fas fa-comments"></i>
+                    </a>
                 </div>
                 @endforeach
             </div>

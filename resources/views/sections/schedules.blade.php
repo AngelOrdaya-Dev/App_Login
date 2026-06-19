@@ -12,11 +12,21 @@
                 @endif
             </p>
         </div>
-        @if(Auth::user()->isAdmin())
-        <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout" style="width:auto; padding:8px 20px; font-size:0.85rem;">
-            <i class="fas fa-plus"></i> Nuevo Horario
-        </button>
-        @endif
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div id="view-switcher" style="display: flex; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 12px; padding: 5px; gap: 5px;">
+                <button class="view-btn active" data-view="timeGridWeek" id="btn-week" onclick="switchView('timeGridWeek', this)">
+                    <i class="fas fa-table"></i> Semana
+                </button>
+                <button class="view-btn" data-view="listWeek" id="btn-list" onclick="switchView('listWeek', this)">
+                    <i class="fas fa-list"></i> Lista
+                </button>
+            </div>
+            @if(Auth::user()->isAdmin())
+            <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout" style="width:auto; padding:8px 20px; font-size:0.85rem;">
+                <i class="fas fa-plus"></i> Nuevo Horario
+            </button>
+            @endif
+        </div>
     </div>
 
     @if(session('success'))
@@ -30,70 +40,40 @@
     </div>
     @endif
 
-    {{-- Semana Grid --}}
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:1.5rem;">
-        @php
-            $days = [1=>'Lunes',2=>'Martes',3=>'Miércoles',4=>'Jueves',5=>'Viernes',6=>'Sábado'];
-            $dayColors = [
-                1 => 'rgba(231,76,60,0.12)',
-                2 => 'rgba(52,152,219,0.12)',
-                3 => 'rgba(46,204,113,0.12)',
-                4 => 'rgba(241,196,15,0.12)',
-                5 => 'rgba(155,89,182,0.12)',
-                6 => 'rgba(230,126,34,0.12)',
-            ];
-        @endphp
+    {{-- FullCalendar Container --}}
+    <div id="calendar-container" style="min-height: 600px;">
+        <div id="calendar"></div>
+    </div>
+</div>
 
-        @foreach($days as $dayNum => $dayName)
-        <div style="background:var(--bg-surface); border:1px solid var(--border-light); border-radius:16px; overflow:hidden;">
-            <div style="background:{{ $dayColors[$dayNum] }}; padding:0.9rem 1.2rem; border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:8px;">
-                <i class="fas fa-calendar-day" style="color:var(--accent-red); font-size:0.9rem;"></i>
-                <span style="font-weight:700; font-size:0.9rem; font-family:var(--font-display);">{{ $dayName }}</span>
-                <span style="margin-left:auto; font-size:0.7rem; background:rgba(255,255,255,0.07); padding:2px 8px; border-radius:20px; color:var(--text-muted);">
-                    {{ $grid[$dayNum]->count() }} clase(s)
-                </span>
-            </div>
-
-            <div style="padding:0.8rem; display:flex; flex-direction:column; gap:0.7rem; min-height:120px;">
-                @forelse($grid[$dayNum] as $slot)
-                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:10px; padding:0.8rem; position:relative;">
-                    <div style="font-size:0.75rem; color:var(--accent-red); font-weight:700; margin-bottom:4px;">
-                        <i class="fas fa-clock"></i>
-                        {{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }} – {{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}
-                    </div>
-                    <div style="font-size:0.85rem; font-weight:600; color:var(--text-main);">{{ $slot->course->name }}</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px; display:flex; flex-wrap:wrap; align-items:center; gap:6px;">
-                        <span style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                            <i class="fas fa-door-open"></i> {{ $slot->classroom->name }}
-                        </span>
-                        @if($slot->course->teacher)
-                        <span style="display:inline-flex; align-items:center; gap:4px; white-space:nowrap; color:var(--text-main);">
-                            · <i class="fas fa-user-tie" style="color:var(--accent-red);"></i> <strong>{{ $slot->course->teacher->name }}</strong>
-                        </span>
-                        @endif
-                    </div>
-
-                    {{-- Docente: botón de asistencia --}}
-                    @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
-                    <a href="{{ route('attendance.form', $slot->course_id) }}"
-                       style="position:absolute; top:8px; right:8px; font-size:0.7rem; background:rgba(46,204,113,0.15); color:#2ecc71; border:1px solid rgba(46,204,113,0.3); padding:3px 8px; border-radius:8px; text-decoration:none; display:flex; align-items:center; gap:4px;">
-                        <i class="fas fa-clipboard-check"></i> Lista
-                    </a>
-                    @endif
-
-                    @if(Auth::user()->isAdmin())
-                    <form action="{{ route('schedules.destroy', $slot->id) }}" method="POST" style="position:absolute; bottom:6px; right:8px;" onsubmit="return confirm('¿Eliminar este horario?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" style="background:transparent; border:none; color:#e74c3c; cursor:pointer; font-size:0.8rem;"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                    @endif
-                </div>
-                @empty
-                <div style="text-align:center; color:var(--text-muted); font-size:0.8rem; padding:1rem 0; opacity:0.5;">Sin clases</div>
-                @endforelse
-            </div>
+{{-- Event Detail Modal --}}
+<div id="eventDetailModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:var(--bg-surface); border:1px solid var(--border-light); border-radius:24px; padding:2.5rem; width:100%; max-width:420px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); position: relative;">
+        <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); background: var(--accent-red); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 4px solid var(--bg-surface); box-shadow: 0 0 20px rgba(255,0,0,0.4);">
+            <i class="fas fa-book-open" style="color: #fff;"></i>
         </div>
-        @endforeach
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <h3 id="eventTitle" style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 1.5rem; color: var(--text-main);"></h3>
+        </div>
+        <div id="eventDetails" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem;"></div>
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            @if(Auth::user()->isTeacher() || Auth::user()->isAdmin())
+            <a id="attendanceLink" href="#" class="btn-premium-logout" style="width: auto; padding: 10px 20px; font-size: 0.85rem; border-radius: 12px;">
+                <i class="fas fa-clipboard-check"></i> Lista de Asistencia
+            </a>
+            @endif
+            @if(Auth::user()->isAdmin())
+            <form id="deleteScheduleForm" method="POST" onsubmit="return confirm('¿Eliminar este horario?')">
+                @csrf @method('DELETE')
+                <button type="submit" style="padding: 10px 20px; font-size: 0.85rem; background: rgba(231,76,60,0.1); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); border-radius: 12px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </form>
+            @endif
+            <button type="button" onclick="closeModal('eventDetailModal')" style="padding: 10px 20px; font-size: 0.85rem; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-light); border-radius: 12px; cursor: pointer; font-weight: 600;">
+                Cerrar
+            </button>
+        </div>
     </div>
 </div>
 
@@ -159,8 +139,151 @@
 </div>
 @endif
 
+<style>
+    .view-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        padding: 6px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .view-btn.active {
+        background: var(--accent-red);
+        color: #fff;
+        box-shadow: 0 3px 10px rgba(255,0,0,0.3);
+    }
+    .view-btn:hover:not(.active) {
+        color: var(--text-main);
+        background: rgba(255,255,255,0.05);
+    }
+
+    /* FullCalendar Dark Override */
+    #calendar {
+        --fc-border-color: var(--border-light);
+        --fc-page-bg-color: transparent;
+        --fc-neutral-bg-color: rgba(255,255,255,0.03);
+        --fc-list-event-hover-bg-color: rgba(255,0,0,0.05);
+        --fc-today-bg-color: rgba(255, 0, 0, 0.04);
+        --fc-now-indicator-color: var(--accent-red);
+        --fc-event-border-color: transparent;
+    }
+    .fc .fc-toolbar-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-main); }
+    .fc .fc-button { background: rgba(255,255,255,0.05) !important; border: 1px solid var(--border-light) !important; color: var(--text-main) !important; font-size: 0.8rem !important; }
+    .fc .fc-button:hover { background: rgba(255,255,255,0.1) !important; }
+    .fc .fc-button-primary:not(:disabled).fc-button-active { background: var(--accent-red) !important; border-color: var(--accent-red) !important; }
+    .fc .fc-col-header-cell-cushion { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; text-decoration: none; }
+    .fc .fc-timegrid-slot-label-cushion { color: var(--text-muted); font-size: 0.75rem; }
+    .fc .fc-daygrid-day-number { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; }
+    .fc .fc-event { border-radius: 8px !important; border: none !important; padding: 3px 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .fc .fc-event:hover { filter: brightness(1.2); }
+    .fc .fc-list-event { background: transparent; }
+    .fc .fc-list-event-title a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .fc .fc-list-event-time { color: var(--text-muted); font-size: 0.8rem; }
+    .fc .fc-list-day-cushion { background: rgba(255,255,255,0.03); color: var(--text-muted); font-size: 0.75rem; }
+    .fc .fc-scrollgrid-section-header { border-bottom: 1px solid var(--border-light) !important; }
+    .fc .fc-scrollgrid-section > * { border-color: var(--border-light) !important; }
+    .fc td, .fc th { border-color: var(--border-light) !important; }
+
+    .event-detail-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 15px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+    }
+    .event-detail-row i { color: var(--accent-red); width: 18px; text-align: center; }
+    .event-detail-row span { font-size: 0.9rem; color: var(--text-main); }
+</style>
+
+<!-- FullCalendar CDN -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales/es.global.min.js"></script>
+
 <script>
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    let calendarInstance = null;
+
+    function switchView(viewName, btn) {
+        if (calendarInstance) calendarInstance.changeView(viewName);
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        calendarInstance = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            locale: 'es',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+            allDaySlot: false,
+            nowIndicator: true,
+            slotMinTime: '07:00:00',
+            slotMaxTime: '22:00:00',
+            height: 'auto',
+            expandRows: true,
+            weekends: true,
+            businessHours: {
+                daysOfWeek: [1, 2, 3, 4, 5, 6],
+                startTime: '07:00',
+                endTime: '22:00',
+            },
+            events: @json($calendarEvents),
+            eventClick: function(info) {
+                const event = info.event;
+                const props = event.extendedProps;
+
+                document.getElementById('eventTitle').textContent = event.title;
+
+                const detailsHtml = `
+                    <div class="event-detail-row">
+                        <i class="fas fa-clock"></i>
+                        <span>${event.startStr.split('T')[1] ? new Date(event.start).toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'}) : ''} – ${event.endStr ? new Date(event.end).toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'}) : ''}</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <i class="fas fa-door-open"></i>
+                        <span>${props.classroom}</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <i class="fas fa-user-tie"></i>
+                        <span>${props.teacher}</span>
+                    </div>
+                `;
+                document.getElementById('eventDetails').innerHTML = detailsHtml;
+
+                const attLink = document.getElementById('attendanceLink');
+                if (attLink) {
+                    attLink.href = '/asistencia/' + props.course_id;
+                }
+
+                const deleteForm = document.getElementById('deleteScheduleForm');
+                if (deleteForm) {
+                    deleteForm.action = '/horarios/' + props.schedule_id;
+                }
+
+                openModal('eventDetailModal');
+            },
+            eventDidMount: function(info) {
+                info.el.style.boxShadow = '0 3px 10px rgba(255,0,0,0.3)';
+            }
+        });
+
+        calendarInstance.render();
+    });
 </script>
 @endsection

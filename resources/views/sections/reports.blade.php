@@ -66,7 +66,14 @@
         <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); padding: 1.2rem; border-radius: 20px;">
             <h5 style="margin-bottom: 1.2rem; color: var(--text-main); font-size: 0.9rem;"><i class="fas fa-receipt" style="color: #f1c40f;"></i> Estado de Pagos</h5>
             <div style="height: 250px; width: 100%; position: relative;">
-                <canvas id="statusChart"></canvas>
+                @if($paymentStatus->isEmpty() || $paymentStatus->sum('count') == 0)
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <p style="font-size: 0.85rem; margin: 0;">No hay datos de pagos disponibles</p>
+                    </div>
+                @else
+                    <canvas id="statusChart"></canvas>
+                @endif
             </div>
         </div>
 

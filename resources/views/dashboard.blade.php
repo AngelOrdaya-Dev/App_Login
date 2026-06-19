@@ -362,25 +362,44 @@
                 </div>
                 
                 <div class="dashboard-col">
-                    <!-- Chart Panel: Registros Mensuales -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <h3 class="panel-title"><i class="fas fa-chart-line"></i> Actividad</h3>
+                    @if(Auth::user()->isAdmin())
+                        <!-- Chart Panel: Registros Mensuales -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="fas fa-chart-line"></i> Actividad</h3>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="monthlyRegistrationsChart"></canvas>
+                            </div>
                         </div>
-                        <div class="chart-wrapper">
-                            <canvas id="monthlyRegistrationsChart"></canvas>
-                        </div>
-                    </div>
 
-                    <!-- Chart Panel: Estudiantes por Carrera -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <h3 class="panel-title"><i class="fas fa-chart-pie"></i> Distribución</h3>
+                        <!-- Chart Panel: Estudiantes por Carrera -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="fas fa-chart-pie"></i> Distribución</h3>
+                            </div>
+                            <div class="chart-wrapper" style="height: 300px;">
+                                <canvas id="careerDistributionChart"></canvas>
+                            </div>
                         </div>
-                        <div class="chart-wrapper" style="height: 300px;">
-                            <canvas id="careerDistributionChart"></canvas>
+                    @elseif(!Auth::user()->isTeacher())
+                        <!-- Chart Panel: Rendimiento Académico (Estudiante) -->
+                        <div class="panel" style="height: fit-content;">
+                            <div class="panel-header">
+                                <h3 class="panel-title"><i class="fas fa-chart-bar"></i> Rendimiento Académico</h3>
+                            </div>
+                            @if(isset($studentGrades) && count($studentGrades['labels']) > 0)
+                                <div class="chart-wrapper" style="height: 350px;">
+                                    <canvas id="studentGradesChart"></canvas>
+                                </div>
+                            @else
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4rem 1rem; color: var(--text-muted); text-align: center;">
+                                    <i class="fas fa-star-half-alt" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
+                                    <p>Aún no tienes calificaciones registradas.</p>
+                                </div>
+                            @endif
                         </div>
-                    </div>
+                    @endif
                 </div>
 
                 <style>
@@ -686,48 +705,54 @@
                             const colors = getThemeColors();
                             const isMobile = window.innerWidth < 768;
                             
+                            @if(Auth::user()->isAdmin())
                             if (monthlyChart) monthlyChart.destroy();
                             if (careerChart) careerChart.destroy();
 
                             // 1. Monthly Chart
-                            monthlyChart = new Chart(ctxMonthly, {
-                                type: 'line',
-                                data: {
-                                    labels: @json($monthlyStats['labels']),
-                                    datasets: [{
-                                        label: 'Nuevos Alumnos',
-                                        data: @json($monthlyStats['data']),
-                                        borderColor: '#ff3e3e',
-                                        backgroundColor: 'rgba(255, 62, 62, 0.05)',
-                                        borderWidth: 2,
-                                        fill: true,
-                                        tension: 0.5,
-                                        pointBackgroundColor: '#ff3e3e',
-                                        pointBorderColor: '#fff',
-                                        pointRadius: isMobile ? 3 : 5,
-                                        pointHoverRadius: 7
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: { legend: { display: false } },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            grid: { color: colors.grid, drawBorder: false },
-                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
-                                        },
-                                        x: {
-                                            grid: { display: false },
-                                            ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                            const ctxMonthly = document.getElementById('monthlyRegistrationsChart');
+                            if (ctxMonthly) {
+                                monthlyChart = new Chart(ctxMonthly.getContext('2d'), {
+                                    type: 'line',
+                                    data: {
+                                        labels: @json($monthlyStats['labels']),
+                                        datasets: [{
+                                            label: 'Nuevos Alumnos',
+                                            data: @json($monthlyStats['data']),
+                                            borderColor: '#ff3e3e',
+                                            backgroundColor: 'rgba(255, 62, 62, 0.05)',
+                                            borderWidth: 2,
+                                            fill: true,
+                                            tension: 0.5,
+                                            pointBackgroundColor: '#ff3e3e',
+                                            pointBorderColor: '#fff',
+                                            pointRadius: isMobile ? 3 : 5,
+                                            pointHoverRadius: 7
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: { legend: { display: false } },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: { color: colors.grid, drawBorder: false },
+                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                                            },
+                                            x: {
+                                                grid: { display: false },
+                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                                            }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
 
                             // 2. Career Chart - Premium Doughnut Style
-                            careerChart = new Chart(ctxCareer, {
+                            const ctxCareer = document.getElementById('careerDistributionChart');
+                            if (ctxCareer) {
+                                careerChart = new Chart(ctxCareer.getContext('2d'), {
                                 type: 'doughnut',
                                 data: {
                                     labels: @json($careerStats['labels']),
@@ -772,6 +797,47 @@
                                     }
                                 }
                             });
+                            @endif
+
+                            // 3. Student Grades Chart
+                            @if(!Auth::user()->isAdmin() && !Auth::user()->isTeacher() && isset($studentGrades) && count($studentGrades['labels']) > 0)
+                            const ctxStudent = document.getElementById('studentGradesChart');
+                            if (ctxStudent) {
+                                if (window.studentChartInstance) window.studentChartInstance.destroy();
+                                window.studentChartInstance = new Chart(ctxStudent.getContext('2d'), {
+                                    type: 'bar',
+                                    data: {
+                                        labels: @json($studentGrades['labels']),
+                                        datasets: [{
+                                            label: 'Calificación',
+                                            data: @json($studentGrades['data']),
+                                            backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                                            borderColor: '#ff0000',
+                                            borderWidth: 1,
+                                            borderRadius: 8,
+                                            barPercentage: 0.6
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: { legend: { display: false } },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                max: 20, // Suponiendo sistema vigesimal
+                                                grid: { color: colors.grid, drawBorder: false },
+                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                            },
+                                            x: {
+                                                grid: { display: false },
+                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            @endif
                         }
 
                     initCharts();
