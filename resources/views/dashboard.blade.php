@@ -202,16 +202,50 @@
 
                         <!-- System Status Widget -->
                         <div class="panel status-mini-card">
-                            <div class="status-header">
-                                <div class="status-indicator">
-                                    <div class="dot"></div>
-                                    <i class="fas fa-server"></i>
+                            <div>
+                                <div class="status-header">
+                                    <div class="status-indicator">
+                                        <div class="dot"></div>
+                                        <i class="fas fa-server"></i>
+                                    </div>
+                                    <div class="status-text">
+                                        <h4>Núcleo Operativo</h4>
+                                        <span>Sistema Estable - 99.9% Uptime</span>
+                                    </div>
                                 </div>
-                                <div class="status-text">
-                                    <h4>Núcleo Operativo</h4>
-                                    <span>Sistema Estable - 99.9% Uptime</span>
+                                
+                                <!-- Server load simulators, visible only on desktop -->
+                                <div class="server-metrics-visual">
+                                    <div class="metric-row">
+                                        <div class="metric-info">
+                                            <span>Carga de CPU</span>
+                                            <strong>12%</strong>
+                                        </div>
+                                        <div class="metric-bar">
+                                            <div class="bar-fill" style="width: 12%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <div class="metric-info">
+                                            <span>Memoria RAM</span>
+                                            <strong>45%</strong>
+                                        </div>
+                                        <div class="metric-bar">
+                                            <div class="bar-fill" style="width: 45%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <div class="metric-info">
+                                            <span>Almacenamiento SSD</span>
+                                            <strong>28%</strong>
+                                        </div>
+                                        <div class="metric-bar">
+                                            <div class="bar-fill" style="width: 28%;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
                             <div class="status-stats">
                                 <div class="s-stat"><strong>24ms</strong><span>Latencia</span></div>
                                 <div class="s-stat"><strong>Optima</strong><span>Carga</span></div>
@@ -247,7 +281,7 @@
                             }
 
                             .status-mini-card {
-                                padding: 1rem 1.2rem !important;
+                                padding: 1.5rem !important;
                                 border: 1px solid rgba(46, 204, 113, 0.2) !important;
                                 background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), transparent) !important;
                             }
@@ -273,9 +307,66 @@
                             .s-stat strong { font-size: 0.8rem; color: var(--text-main); }
                             .s-stat span { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
 
+                            /* Simulated server visual metrics styles */
+                            .server-metrics-visual {
+                                display: none;
+                                flex-direction: column;
+                                gap: 12px;
+                                margin: 1.5rem 0;
+                                padding: 1rem;
+                                background: rgba(255,255,255,0.01);
+                                border: 1px solid rgba(255,255,255,0.03);
+                                border-radius: 16px;
+                            }
+                            .metric-row {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 6px;
+                            }
+                            .metric-info {
+                                display: flex;
+                                justify-content: space-between;
+                                font-size: 0.7rem;
+                            }
+                            .metric-info span { color: var(--text-muted); }
+                            .metric-info strong { color: #2ecc71; font-family: var(--font-display); }
+                            .metric-bar {
+                                width: 100%;
+                                height: 4px;
+                                background: rgba(255,255,255,0.04);
+                                border-radius: 10px;
+                                overflow: hidden;
+                            }
+                            .bar-fill {
+                                height: 100%;
+                                background: #2ecc71;
+                                border-radius: 10px;
+                                box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+                            }
+
                             @media (max-width: 400px) {
                                 .quick-access-grid { grid-template-columns: 1fr 1fr; }
                                 .mini-tile { padding: 1rem 0.5rem; }
+                            }
+
+                            /* Stretch System Status Widget to fill space on Desktop */
+                            @media (min-width: 901px) {
+                                .main-dashboard-grid {
+                                    align-items: stretch !important;
+                                }
+                                .main-dashboard-grid > .dashboard-col:first-child {
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                                .status-mini-card {
+                                    flex: 1;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: space-between;
+                                }
+                                .server-metrics-visual {
+                                    display: flex !important;
+                                }
                             }
                         </style>
                     @else
