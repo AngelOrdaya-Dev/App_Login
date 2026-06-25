@@ -25,12 +25,21 @@ use Illuminate\Support\Facades\DB;
 class SectionController extends Controller
 {
     use RecordsAuditLogs;
-    public function students()
+    public function students(Request $request)
     {
-        // Obtener solo usuarios que sean estudiantes (role 'student' o null)
-        $students = User::where(function($q) {
+        $query = User::where(function($q) {
             $q->where('role', 'student')->orWhereNull('role');
-        })->orderBy('id', 'asc')->paginate(10);
+        });
+
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('email', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $students = $query->orderBy('id', 'asc')->paginate(10)->withQueryString();
         $careers = Career::all();
         return view('sections.students', compact('students', 'careers'));
     }
@@ -63,6 +72,25 @@ class SectionController extends Controller
         $this->recordAuditLog('Registro de Estudiante', "Se registró al estudiante {$request->name} ({$request->email})");
 
         return back()->with('success', 'Estudiante registrado correctamente. Contraseña temporal: password123');
+    }
+
+    public function updateStudent(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'career_id' => 'required|exists:careers,id',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'career_id' => $request->career_id,
+        ]);
+
+        $this->recordAuditLog('Actualización de Estudiante', "Se actualizó al estudiante {$request->name} ({$request->email})");
+
+        return back()->with('success', 'Estudiante actualizado correctamente.');
     }
 
     public function destroyStudent(User $user)

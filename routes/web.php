@@ -33,6 +33,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::middleware(['admin'])->group(function () {
         Route::get('/estudiantes', [SectionController::class, 'students'])->name('students');
         Route::post('/estudiantes', [SectionController::class, 'storeStudent'])->name('students.store');
+        Route::put('/estudiantes/{user}', [SectionController::class, 'updateStudent'])->name('students.update');
         Route::delete('/estudiantes/{user}', [SectionController::class, 'destroyStudent'])->name('students.destroy');
         
         Route::get('/aulas', [SectionController::class, 'classrooms'])->name('classrooms');

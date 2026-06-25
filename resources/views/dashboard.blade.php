@@ -685,8 +685,8 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const ctxMonthly = document.getElementById('monthlyRegistrationsChart').getContext('2d');
-                    const ctxCareer = document.getElementById('careerDistributionChart').getContext('2d');
+                    const ctxMonthly = document.getElementById('monthlyRegistrationsChart');
+                    const ctxCareer = document.getElementById('careerDistributionChart');
                     let monthlyChart, careerChart;
 
                     function getThemeColors() {
