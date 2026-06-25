@@ -496,8 +496,8 @@
         <div class="card">
             <!-- Brand -->
             <div class="brand">
-                <div class="brand-icon">
-                    <i class="fas fa-graduation-cap"></i>
+                <div class="brand-icon" style="background: transparent; box-shadow: none;">
+                    <img src="/Logo.jpeg" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 22px; box-shadow: 0 16px 32px rgba(0,0,0,0.4);">
                 </div>
                 <div>
                     <div class="brand-name">PREMIER</div>

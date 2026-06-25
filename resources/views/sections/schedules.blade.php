@@ -13,14 +13,7 @@
             </p>
         </div>
         <div class="schedule-topbar-actions">
-            <div id="view-switcher" class="view-switcher-wrap">
-                <button class="view-btn" id="btn-week" onclick="switchView('timeGridWeek', this)">
-                    <i class="fas fa-table"></i> <span>Semana</span>
-                </button>
-                <button class="view-btn" id="btn-list" onclick="switchView('listWeek', this)">
-                    <i class="fas fa-list"></i> <span>Lista</span>
-                </button>
-            </div>
+            <!-- View switcher removed as requested -->
             @if(Auth::user()->isAdmin())
             <button type="button" onclick="openModal('scheduleModal')" class="btn-premium-logout schedule-new-btn">
                 <i class="fas fa-plus"></i> <span class="btn-text-full">Nuevo Horario</span><span class="btn-text-short">Nuevo</span>
@@ -252,25 +245,12 @@
 
     let calendarInstance = null;
 
-    function switchView(viewName, btn) {
-        if (calendarInstance) calendarInstance.changeView(viewName);
-        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
         const isMobile = window.innerWidth < 640;
         const calendarEl = document.getElementById('calendar');
 
-        // En móvil: activar botón de lista por defecto
-        if (isMobile) {
-            document.getElementById('btn-list').classList.add('active');
-        } else {
-            document.getElementById('btn-week').classList.add('active');
-        }
-
         calendarInstance = new FullCalendar.Calendar(calendarEl, {
-            initialView: isMobile ? 'listWeek' : 'timeGridWeek',
+            initialView: 'listWeek',
             locale: 'es',
             headerToolbar: {
                 left: 'prev,next today',

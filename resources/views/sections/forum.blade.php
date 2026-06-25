@@ -142,7 +142,7 @@
     .forum-input {
         flex-shrink: 0;
         padding: 0.9rem 1rem;
-        border-top: 1px solid var(--border-light);
+        border-top: none;
         background: var(--bg-card);
     }
     .forum-input-form {
@@ -293,7 +293,7 @@
             @csrf
             <textarea name="message"
                       rows="1"
-                      placeholder="Escribe tu mensaje o duda aquí..."
+                      placeholder="Deja tu mensaje"
                       required
                       id="forumTextarea"
                       onInput="autoResize(this)"></textarea>
