@@ -695,6 +695,7 @@
                             text: isLight ? '#111111' : 'rgba(255, 255, 255, 0.7)',
                             grid: isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)',
                             accent: '#ff0000',
+                            bgSurface: isLight ? '#ffffff' : '#0f0f11',
                             bars: isLight 
                                 ? ['#ff0000', '#2a2a2e', '#44444a', '#800000', '#666666']
                                 : ['#ff0000', '#ffffff', '#44444a', '#800000', '#d1d1d1']
@@ -702,140 +703,156 @@
                     }
 
                         function initCharts() {
+                            if (typeof Chart === 'undefined') {
+                                console.error('Chart.js library is not loaded.');
+                                return;
+                            }
                             const colors = getThemeColors();
                             const isMobile = window.innerWidth < 768;
                             
                             @if(Auth::user()->isAdmin())
-                            if (monthlyChart) monthlyChart.destroy();
-                            if (careerChart) careerChart.destroy();
-
                             // 1. Monthly Chart
-                            const ctxMonthly = document.getElementById('monthlyRegistrationsChart');
-                            if (ctxMonthly) {
-                                monthlyChart = new Chart(ctxMonthly.getContext('2d'), {
-                                    type: 'line',
-                                    data: {
-                                        labels: @json($monthlyStats['labels']),
-                                        datasets: [{
-                                            label: 'Nuevos Alumnos',
-                                            data: @json($monthlyStats['data']),
-                                            borderColor: '#ff3e3e',
-                                            backgroundColor: 'rgba(255, 62, 62, 0.05)',
-                                            borderWidth: 2,
-                                            fill: true,
-                                            tension: 0.5,
-                                            pointBackgroundColor: '#ff3e3e',
-                                            pointBorderColor: '#fff',
-                                            pointRadius: isMobile ? 3 : 5,
-                                            pointHoverRadius: 7
-                                        }]
-                                    },
-                                    options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        plugins: { legend: { display: false } },
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true,
-                                                grid: { color: colors.grid, drawBorder: false },
-                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
-                                            },
-                                            x: {
-                                                grid: { display: false },
-                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                            try {
+                                const ctxMonthly = document.getElementById('monthlyRegistrationsChart');
+                                if (ctxMonthly) {
+                                    if (monthlyChart) monthlyChart.destroy();
+                                    monthlyChart = new Chart(ctxMonthly.getContext('2d'), {
+                                        type: 'line',
+                                        data: {
+                                            labels: @json($monthlyStats['labels']),
+                                            datasets: [{
+                                                label: 'Nuevos Alumnos',
+                                                data: @json($monthlyStats['data']),
+                                                borderColor: '#ff3e3e',
+                                                backgroundColor: 'rgba(255, 62, 62, 0.05)',
+                                                borderWidth: 2,
+                                                fill: true,
+                                                tension: 0.5,
+                                                pointBackgroundColor: '#ff3e3e',
+                                                pointBorderColor: '#fff',
+                                                pointRadius: isMobile ? 3 : 5,
+                                                pointHoverRadius: 7
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            plugins: { legend: { display: false } },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    grid: { color: colors.grid, drawBorder: false },
+                                                    ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                                                },
+                                                x: {
+                                                    grid: { display: false },
+                                                    ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 }, padding: 10 }
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+                            } catch (e) {
+                                console.error('Error rendering Monthly Chart:', e);
                             }
 
                             // 2. Career Chart - Premium Doughnut Style
-                            const ctxCareer = document.getElementById('careerDistributionChart');
-                            if (ctxCareer) {
-                                careerChart = new Chart(ctxCareer.getContext('2d'), {
-                                type: 'doughnut',
-                                data: {
-                                    labels: @json($careerStats['labels']),
-                                    datasets: [{
-                                        data: @json($careerStats['data']),
-                                        backgroundColor: [
-                                            '#ff0000', '#2d2d2d', '#4a4a4a', '#8a8a8a', 
-                                            '#ff3333', '#1a1a1a', '#5c5c5c', '#9e9e9e',
-                                            '#cc0000', '#3d3d3d', '#6e6e6e', '#bdbdbd'
-                                        ],
-                                        borderWidth: 2,
-                                        borderColor: colors.bgSurface,
-                                        hoverOffset: 15
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    cutout: isMobile ? '65%' : '75%',
-                                    plugins: { 
-                                        legend: { 
-                                            display: true,
-                                            position: isMobile ? 'bottom' : 'right',
-                                            labels: {
-                                                color: colors.text,
-                                                font: { family: 'Outfit', size: isMobile ? 10 : 11, weight: '600' },
-                                                padding: isMobile ? 10 : 20,
-                                                usePointStyle: true,
-                                                pointStyle: 'circle'
-                                            }
+                            try {
+                                const ctxCareer = document.getElementById('careerDistributionChart');
+                                if (ctxCareer) {
+                                    if (careerChart) careerChart.destroy();
+                                    careerChart = new Chart(ctxCareer.getContext('2d'), {
+                                        type: 'doughnut',
+                                        data: {
+                                            labels: @json($careerStats['labels']),
+                                            datasets: [{
+                                                data: @json($careerStats['data']),
+                                                backgroundColor: [
+                                                    '#ff0000', '#2d2d2d', '#4a4a4a', '#8a8a8a', 
+                                                    '#ff3333', '#1a1a1a', '#5c5c5c', '#9e9e9e',
+                                                    '#cc0000', '#3d3d3d', '#6e6e6e', '#bdbdbd'
+                                                ],
+                                                borderWidth: 2,
+                                                borderColor: colors.bgSurface,
+                                                hoverOffset: 15
+                                            }]
                                         },
-                                        tooltip: {
-                                            backgroundColor: 'rgba(0,0,0,0.9)',
-                                            titleFont: { family: 'Outfit', size: 14, weight: 'bold' },
-                                            bodyFont: { family: 'Inter', size: 13 },
-                                            padding: 15,
-                                            cornerRadius: 12,
-                                            displayColors: true,
-                                            borderColor: 'rgba(255,0,0,0.3)',
-                                            borderWidth: 1
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            cutout: isMobile ? '65%' : '75%',
+                                            plugins: { 
+                                                legend: { 
+                                                    display: true,
+                                                    position: isMobile ? 'bottom' : 'right',
+                                                    labels: {
+                                                        color: colors.text,
+                                                        font: { family: 'Outfit', size: isMobile ? 10 : 11, weight: '600' },
+                                                        padding: isMobile ? 10 : 20,
+                                                        usePointStyle: true,
+                                                        pointStyle: 'circle'
+                                                    }
+                                                },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(0,0,0,0.9)',
+                                                    titleFont: { family: 'Outfit', size: 14, weight: 'bold' },
+                                                    bodyFont: { family: 'Inter', size: 13 },
+                                                    padding: 15,
+                                                    cornerRadius: 12,
+                                                    displayColors: true,
+                                                    borderColor: 'rgba(255,0,0,0.3)',
+                                                    borderWidth: 1
+                                                }
+                                            }
                                         }
-                                    }
+                                    });
                                 }
-                            });
+                            } catch (e) {
+                                console.error('Error rendering Career Chart:', e);
+                            }
                             @endif
 
                             // 3. Student Grades Chart
                             @if(!Auth::user()->isAdmin() && !Auth::user()->isTeacher() && isset($studentGrades) && count($studentGrades['labels']) > 0)
-                            const ctxStudent = document.getElementById('studentGradesChart');
-                            if (ctxStudent) {
-                                if (window.studentChartInstance) window.studentChartInstance.destroy();
-                                window.studentChartInstance = new Chart(ctxStudent.getContext('2d'), {
-                                    type: 'bar',
-                                    data: {
-                                        labels: @json($studentGrades['labels']),
-                                        datasets: [{
-                                            label: 'Calificación',
-                                            data: @json($studentGrades['data']),
-                                            backgroundColor: 'rgba(255, 0, 0, 0.8)',
-                                            borderColor: '#ff0000',
-                                            borderWidth: 1,
-                                            borderRadius: 8,
-                                            barPercentage: 0.6
-                                        }]
-                                    },
-                                    options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        plugins: { legend: { display: false } },
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true,
-                                                max: 20, // Suponiendo sistema vigesimal
-                                                grid: { color: colors.grid, drawBorder: false },
-                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
-                                            },
-                                            x: {
-                                                grid: { display: false },
-                                                ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                            try {
+                                const ctxStudent = document.getElementById('studentGradesChart');
+                                if (ctxStudent) {
+                                    if (window.studentChartInstance) window.studentChartInstance.destroy();
+                                    window.studentChartInstance = new Chart(ctxStudent.getContext('2d'), {
+                                        type: 'bar',
+                                        data: {
+                                            labels: @json($studentGrades['labels']),
+                                            datasets: [{
+                                                label: 'Calificación',
+                                                data: @json($studentGrades['data']),
+                                                backgroundColor: 'rgba(255, 0, 0, 0.8)',
+                                                borderColor: '#ff0000',
+                                                borderWidth: 1,
+                                                borderRadius: 8,
+                                                barPercentage: 0.6
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                            plugins: { legend: { display: false } },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    max: 20,
+                                                    grid: { color: colors.grid, drawBorder: false },
+                                                    ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                                },
+                                                x: {
+                                                    grid: { display: false },
+                                                    ticks: { color: colors.text, font: { size: isMobile ? 9 : 11 } }
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+                            } catch (e) {
+                                console.error('Error rendering Student Grades Chart:', e);
                             }
                             @endif
                         }

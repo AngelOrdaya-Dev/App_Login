@@ -5,10 +5,14 @@
     <div class="panel-header">
         <h3 class="panel-title"><i class="fas fa-users"></i> Gestión de Estudiantes</h3>
         <div class="panel-header-actions">
-            <form action="{{ route('students') }}" method="GET" style="position: relative; flex: 2; min-width: 180px; display: flex;">
-                <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 100%;">
-                <button type="submit" style="display:none;"></button>
+            <form action="{{ route('students') }}" method="GET" style="display: flex; gap: 8px; flex: 2; min-width: 200px;" id="searchForm">
+                <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; pointer-events: none;"></i>
+                    <input type="text" name="search" id="searchInput" value="{{ request('search') }}" placeholder="Buscar estudiante..." style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-light); color: var(--text-main); padding: 8px 15px 8px 35px; border-radius: 8px; font-size: 0.8rem; outline: none; width: 100%;">
+                </div>
+                <button type="submit" class="btn-premium-logout" style="padding: 8px 15px; font-size: 0.8rem; width: auto; background: var(--accent-red); color: white; display: flex; align-items: center; gap: 5px; border-radius: 8px; cursor: pointer;">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
             </form>
             <a href="{{ route('export.students') }}" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border-light); padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; min-width: 100px;">
                 <i class="fas fa-file-csv"></i> Exportar
@@ -174,6 +178,26 @@
         document.getElementById('edit_career_id').value = career_id || '';
         document.getElementById('editStudentForm').action = '/estudiantes/' + id;
         openModal('editStudentModal');
+    }
+
+    // Table Live Search Filter for current page
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('.student-row');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.student-name').textContent.toLowerCase();
+                const email = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     }
 </script>
 @endsection

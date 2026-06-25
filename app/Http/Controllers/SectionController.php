@@ -35,7 +35,10 @@ class SectionController extends Controller
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'like', "%{$searchTerm}%")
-                  ->orWhere('email', 'like', "%{$searchTerm}%");
+                  ->orWhere('email', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('career', function($subQ) use ($searchTerm) {
+                      $subQ->where('name', 'like', "%{$searchTerm}%");
+                  });
             });
         }
 
