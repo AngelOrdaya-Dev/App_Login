@@ -31,7 +31,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 USER root
 COPY --chmod=755 docker-entrypoint.sh /etc/entrypoint.d/99-docker-entrypoint.sh
 
+ENV HTTP_PORT=8080
 EXPOSE 8080
-
-USER www-data
 
