@@ -2,7 +2,7 @@ FROM serversideup/php:8.2-fpm-nginx
 
 # Set Laravel environment
 ENV SSL_MODE="off"
-ENV AUTORUN_ENABLED=true
+ENV AUTORUN_ENABLED=false
 ENV PHP_OPCACHE_ENABLE=1
 ENV HTTP_PORT=8080
 
