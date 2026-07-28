@@ -5,10 +5,11 @@ ENV SSL_MODE="off"
 ENV AUTORUN_ENABLED=true
 ENV PHP_OPCACHE_ENABLE=1
 
-# Install Node.js for Vite build
+# Install Node.js for Vite build and PostgreSQL driver for PHP
 USER root
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get update \
+    && apt-get install -y nodejs php8.2-pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -29,6 +30,8 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Copy startup script to execute migrations and seeding automatically
 USER root
 COPY --chmod=755 docker-entrypoint.sh /etc/entrypoint.d/99-docker-entrypoint.sh
+
+EXPOSE 8080
 
 USER www-data
 

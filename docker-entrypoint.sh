@@ -10,8 +10,8 @@ php artisan route:clear
 php artisan view:clear
 
 # Run migrations and seed data
-php artisan migrate --force
-php artisan db:seed --force
+php artisan migrate --force || echo "Migration skipped or failed"
+php artisan db:seed --force || echo "Seeding skipped or failed"
 
 # Re-create cache for production performance
 php artisan config:cache
