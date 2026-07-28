@@ -4,9 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
 Route::get('/register', [UserController::class, 'create'])->name('register');
 Route::post('/register', [UserController::class, 'store']);
